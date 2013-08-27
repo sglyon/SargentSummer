@@ -1,0 +1,146 @@
+%!TEX root = ../marching3.tex
+
+\newcommand{\pu} {\left[ - (Q + \beta B'BP)^{-1} (H + \beta B'PA)x \right]}
+\newcommand{\puprime} {\left[ - x'(\beta A'PB + H')(Q + \beta B'PB)^{-1} \right]}
+
+
+\begin{homeworkProblem}[Problem 5.1]
+
+Consider the modified version of the optimal linear regulator problem where the objective is to maximize
+
+\begin{align} \label{eq:p1e1}
+  - \sum_{t=0}^{\infty} \beta^t \{ x_t' R x_t + u_t'Qu_t + 2 u_t' H x_t \}
+\end{align}
+
+subject to the law of motion
+
+\begin{align} \label{eq:p1e2}
+  x_{t+1} = Ax_t + B u_t
+\end{align}
+
+Here $x_t$ is an $n \times 1$ state vector, $u_t$ is a $k \times 1$ vector of controls, and $x_0$ is a given initial condition. The matrices $R$ and $Q$ are positive definite and symmetric. The maximization is with respect to sequences $\{u_r, x_t\}_{t=0}^{\infty}$.
+
+\begin{enumerate}[a.]
+  \item Show that the optimal policy has the form
+    \begin{align} \label{eq:p1e3}
+      u_t = - \left(Q + \beta B' P B \right)^{-1} \left(\beta B' P A + H \right) x_t
+    \end{align}
+
+    where $P$ solves the algebraic matrix Riccati equation
+
+    \begin{align} \label{eq:p1e4}
+      P = R + \beta A' P A - \left(\beta A' P B + H' \right)\left(Q + \beta B'P B \right)^{-1} \left(\beta B' P A + H \right)
+    \end{align}
+
+  \item  Write a Matlab (Python) program to solve Equation \ref{eq:p1e4} by iterating on $P$, starting with $P$ being equal to a matrix of zeros.
+
+  \end{enumerate}
+
+  \vspace{.2in}
+
+  \problemAnswer{
+
+    \begin{enumerate}[a.]
+      \item To begin this part of the problem, I guess that the value function is quadratic in $x$: $v(x) = -x'Px$. I can then write out the Bellman operator
+
+        \begin{align} \label{eq:p1e5}
+          -x P x &= \max_{u} \left\{-x'Rx - u'Qu - 2u'Hx - \beta (Ax + Bu)' P (Ax + Bu) \right\} \\
+          &= \max_{u} \left\{-x'Rx - u'Qu - 2u'Hx - \beta x'A'PAx - \beta x'A'PBu - \beta u'B'PAx - \beta u'B'PBu \right\}
+        \end{align}
+
+        The first order conditions of \ref{eq:p1e5} with respect to $u$ can be calculated and simplified as follows (note that $P$, $Q$, and $R$  are symmetric):
+
+        \begin{align} \label{eq:p1e6}
+          0 &= - (Q + Q') u - 2 H x - \beta B'P'Ax - \beta B'PAx - \beta (B'PB + B'P'B) u \\
+            (-1) 0 &=  2Qu + 2Hx + \beta 2B'PAx + \beta 2B'PBu \\
+            (2Q + 2\beta B'BP)u &= -2Hx - 2 \beta B'PAx \\
+            (Q + \beta B'BP)u &= -Hx - \beta B'PAx \\
+            u &=- (Q + \beta B'BP)^{-1} (H + \beta B'PA)x
+        \end{align}
+
+        The expression for $u$, found in Equation \ref{eq:p1e6} is what I was asked to find.  I can now substitute this result back into the Bellman operator in Equation \ref{eq:p1e5} and simplify to get the desired expression for $P$:
+
+        \begin{align*}
+          -x P x &= -x'Rx - u'Qu - 2u'Hx - \beta x'A'PAx - \beta x'A'PBu - \beta u'B'PAx - \beta u'B'PBu \\
+          \begin{split}
+            &= -x'Rx \\
+            &\quad- \pu'Q\pu \\
+            &\quad - 2\pu'Hx \\
+            & \quad - \beta x'A'PAx \\
+            & \quad - \beta x'A'PB\pu \\
+            & \quad - \beta \pu'B'PAx \\
+            & \quad - \beta \pu'B'PB \pu
+          \end{split} \\
+          \begin{split}
+            &= x'Rx \\
+            &\quad + \puprime Q\pu \\
+            & \quad + \beta \puprime B'PB \pu \\
+            &\quad + 2\puprime Hx \\
+            & \quad + \beta x'A'PAx \\
+            & \quad + \beta x'A'PB\pu \\
+            & \quad + \beta \puprime B'PAx
+          \end{split} \\
+        \end{align*}
+
+        I can now collect on second and third terms (which I define as a variable $D$) in the previous expression and simplify.
+
+        \begin{align*}
+          D &= \text{Term}_1 + \text{Term}_3 \\
+            \begin{split}
+              &\quad\puprime Q\pu \\
+              &\quad +\beta \puprime B'PB \pu
+            \end{split} \\
+              &= \puprime (Q + \beta B'PB)\pu \\
+              &= x'(\beta A'PB + H')(Q + \beta B'PB)^{-1}(\beta B'PA + H) x
+        \end{align*}
+
+        I can now substitute $D$ back into the long equation it came from to get the expression below. Note that the simplification I then do comes in three steps: 1) I use symmetric matrices to combine the last two items from the first expression into a single expression, 2) I use the transpose to collect this new last item with the third item to simplify, and 3) I add like terms.
+
+        \begin{align*}
+          -x P x &= -x'Rx - u'Qu - 2u'Hx - \beta x'A'PAx - \beta x'A'PBu - \beta u'B'PAx - \beta u'B'PBu \\
+          \begin{split}
+            &= x'Rx \\
+            &\quad + x'(\beta A'PB + H')(Q + \beta B'PB)^{-1}(\beta B'PA + H) x \\
+            &\quad + 2\puprime Hx \\
+            & \quad + \beta x'A'PAx \\
+            & \quad + \beta x'A'PB\pu \\
+            & \quad + \beta \puprime B'PAx
+          \end{split}\\
+          \begin{split}
+            &= x'Rx \\
+            &\quad + x'(\beta A'PB + H')(Q + \beta B'PB)^{-1}(\beta B'PA + H) x \\
+            &\quad + 2\puprime Hx \\
+            & \quad + \beta x'A'PAx \\
+            & \quad + 2\beta \puprime B'PAx
+          \end{split}\\
+          \begin{split}
+            &= x'Rx \\
+            &\quad + x'(\beta A'PB + H')(Q + \beta B'PB)^{-1}(\beta B'PA + H) x \\
+            & \quad + \beta x'A'PAx \\
+            & \quad -2x'(\beta A'PB + H')(Q+ \beta B'PB)^{-1} (B'PA + H)x
+          \end{split}\\
+          \begin{split}
+            &= x'Rx \\
+            &\quad - x'(\beta A'PB + H')(Q + \beta B'PB)^{-1}(\beta B'PA + H) x \\
+            & \quad + \beta x'A'PAx \\
+          \end{split}
+        \end{align*}
+
+        I can now collect terms and to pattern matching. I know that the left-hand side is of the form $x'Px$, so I arrange the right-hand side to look the same and simplify to get my final expression for P
+
+        \begin{align*}
+          x'Px &= x' \left[ R + \beta A'PA - (\beta A'PB + H')(Q + \beta B'PB)^{-1}(\beta B'PA + H) \right]x' \\
+            P &= R + \beta A'PA - (\beta A'PB + H')(Q + \beta B'PB)^{-1}(\beta B'PA + H)
+        \end{align*} \qed
+
+      \item The Python program I wrote for this problem is included in Listing  \ref{code:riccati}.
+
+    \end{enumerate}
+
+    \setstretch{0.68}
+    \lstinputlisting[language=Python, linerange={1-3,  452-547}, caption= Python Function \texttt{riccati} to solve the algebraic Riccatil equation by iteration, label=code:riccati]{../rmt_utils.py}
+    \setstretch{1.5}
+    \qed
+
+  }
+\end{homeworkProblem}
