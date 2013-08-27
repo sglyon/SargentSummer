@@ -1,0 +1,706 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!--
+    /*DOCUMENTATION ************************************************
+    * This document was generated with Pandoc, using a minimally   *
+    * modified version of Brett Terpstra's "GitHub" stylesheet,    *
+    * as included in Marked.app (http://markedapp.com), copyright  *
+    * 2011 Brett Terpstra and used, gratefully, with permission.   *
+    * Please leave this notice intact when building or distributing*
+    * your HTML. Brett's kindness in allowing his work to be reused*
+    * and redistributed is deeply appreciated.    (DPS, 2012-12-06)*
+    ***************************************************************/
+-->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta name="generator" content="pandoc">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<style>
+html, body {
+    color: black;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font: 13.34px helvetica,arial,freesans,clean,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.4;
+    padding: 3px;
+    background: #fff;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+
+p {
+    margin: 1em 0;
+}
+
+a {
+    color: #4183c4;
+    text-decoration: none;
+}
+
+em em {
+    font-style: normal;
+}
+
+#wrapper {
+    background-color: #fff;
+    border: 3px solid #eee !important;
+    padding: 0 30px;
+    /*margin: 15px;*/
+    max-width: 700px;
+    margin: 15px auto;
+}
+
+#wrapper {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+#wrapper>*:first-child {
+    margin-top: 0!important;
+}
+
+#wrapper>*:last-child {
+    margin-bottom: 0!important;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    margin: 15px 0;
+    padding-bottom: 2px;
+    font-size: 24px;
+    border-bottom: 1px solid #eee;
+}
+
+h2 {
+    margin: 20px 0 10px 0;
+    font-size: 18px;
+}
+
+h3 {
+    margin: 20px 0 10px 0;
+    padding-bottom: 2px;
+    font-size: 14px;
+    border-bottom: 1px solid #ddd;
+}
+
+h4 {
+    font-size: 14px;
+    line-height: 26px;
+    padding: 18px 0 4px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+h5 {
+    font-size: 13px;
+    line-height: 26px;
+    padding: 14px 0 0;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+h6 {
+    color: #666;
+    font-size: 14px;
+    line-height: 26px;
+    padding: 18px 0 0;
+    font-weight: normal;
+    font-variant: italic;
+}
+
+hr {
+    background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OENDRjNBN0E2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OENDRjNBN0I2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo4Q0NGM0E3ODY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo4Q0NGM0E3OTY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqqezsUAAAAfSURBVHjaYmRABcYwBiM2QSA4y4hNEKYDQxAEAAIMAHNGAzhkPOlYAAAAAElFTkSuQmCC) repeat-x 0 0;border: 0 none;
+    color: #ccc;
+    height: 4px;
+    margin: 20px 0;
+    padding: 0;
+}
+
+#wrapper>h2:first-child,#wrapper>h1:first-child,#wrapper>h1:first-child+h2 {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+#wrapper>h3:first-child,#wrapper>h4:first-child,#wrapper>h5:first-child,#wrapper>h6:first-child {
+    margin: 0;
+    padding: 0;
+}
+
+h4+p,h5+p,h6+p {
+    margin-top: 0;
+}
+
+li p.first {
+    display: inline-block;
+}
+
+ul,ol {
+    margin: 15px 0 15px 25px;
+}
+
+ul li,ol li {
+    margin-top: 7px;
+    margin-bottom: 7px;
+}
+
+ul li>*:last-child,ol li>*:last-child {
+    margin-bottom: 0;
+}
+
+ul li>*:first-child,ol li>*:first-child {
+    margin-top: 0;
+}
+
+#wrapper>ul,#wrapper>ol {
+    margin-top: 21px;
+    margin-left: 36px;
+}
+
+dl {
+    margin: 0;
+    padding: 10px 1em 10px;
+}
+
+dl dt {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: normal;
+    margin: 0;
+    padding: 5px 0 5px;
+}
+
+dl dd {
+    font-size: 13px;
+    margin: 0;
+    padding: 0px 1em 0;
+}
+
+blockquote {
+    margin: 14px 0;
+    border-left: 4px solid #ddd;
+    padding-left: 11px;
+    color: #555;
+}
+
+tbody {
+    display: table-row-group;
+}
+
+tfoot {
+    display: table-footer-group;
+}
+
+table {
+    margin-bottom: 2em;
+    padding: 0;
+    font-size: 14px;
+    border-collapse: collapse;
+
+    -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, .35);
+    -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, .35);
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, .35);
+    width: 70%;
+    margin: 0 auto 2em auto;
+}
+
+table th,table td {
+    padding: 10px 10px 9px;
+    line-height: 18px;
+    text-align: left;
+}
+
+table th {
+    padding-top: 9px;
+    font-family: LeagueGothic;
+    font-size: 18px;
+    font-weight: normal !important;
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+
+table td {
+    vertical-align: top;
+    border-top: 1px solid #ddd;
+    font-family: fjord,georgia,serif;
+    font-size: 14px !important;
+}
+
+table tbody th {
+    border-top: 1px solid #ddd;
+    vertical-align: top;
+}
+
+table {
+    border: 1px solid #ddd;
+    border-collapse: separate;
+    *border-collapse: collapse; /* IE7, collapse table to remove spacing */
+
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+table th + th,table td + td,table th + td {
+    border-left: 1px solid #ddd;
+}
+
+table thead tr:first-child th:first-child,table tbody tr:first-child td:first-child {
+    -webkit-border-radius: 4px 0 0 0;
+    -moz-border-radius: 4px 0 0 0;
+    border-radius: 4px 0 0 0;
+}
+
+table thead tr:first-child th:last-child,table tbody tr:first-child td:last-child {
+    -webkit-border-radius: 0 4px 0 0;
+    -moz-border-radius: 0 4px 0 0;
+    border-radius: 0 4px 0 0;
+}
+
+table tbody tr:last-child td:first-child {
+    -webkit-border-radius: 0 0 0 4px;
+    -moz-border-radius: 0 0 0 4px;
+    border-radius: 0 0 0 4px;
+}
+
+table tbody tr:last-child td:last-child {
+    -webkit-border-radius: 0 0 4px 0;
+    -moz-border-radius: 0 0 4px 0;
+    border-radius: 0 0 4px 0;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: rgba(0,0,0,0.03);
+}
+
+img {
+    max-width: 100%;
+    height: auto
+}
+
+p code, p tt {
+    margin: 0 2px;
+    padding: 2px 5px;
+    white-space: nowrap;
+    border: 1px solid #ccc;
+    background-color: #f8f8f8;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    font-size: 12px
+}
+
+pre>code {
+    margin: 0;
+    padding: 0;
+    white-space: pre;
+    border: none;
+    background: transparent;
+    font-size: 13px
+}
+
+#wrapper>pre {
+    background-color: #f8f8f8;
+    border: 1px solid #ccc;
+    font-size: 13px;
+    line-height: 19px;
+    overflow: auto;
+    padding: 6px 10px;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+
+
+#wrapper>pre,#wrapper>div.highlight {
+    margin: 10px 0 0;
+}
+
+pre code,pre tt {
+    background-color: transparent;
+    border: none;
+}
+
+#wrapper {
+    background-color: #fff;
+    border: 1px solid #CACACA;
+    padding: 30px;
+}
+
+pre.poetry {
+    font-family: Georgia, Garamond, serif !important;
+    font-style: italic;
+    font-size: 110% !important;
+    line-height: 1.6em;
+    display: block;
+    margin-left: 1em;
+}
+
+pre.poetry code {
+    font-family: Georgia, Garamond, serif !important;
+    word-break: break-all;
+    word-break: break-word; /* Non standard for webkit */
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    hyphens: auto;
+    white-space: pre-wrap;
+}
+
+sup,sub,a.footnote {
+    font-size: 1.4ex;
+    height: 0;
+    line-height: 1;
+    vertical-align: super;
+    position: relative;
+}
+
+sub {
+    vertical-align: sub;
+    top: -1px;
+}
+
+@media print {
+    body {
+        background: #fff;
+    }
+
+    img, pre, blockquote, table, figure {
+        page-break-inside: avoid
+    }
+
+    #wrapper {
+        background: #fff;
+        border: none;
+    }
+
+    code {
+        background-color: #fff;
+        color: #444!important;
+        padding: 0 .2em;
+        border: 1px solid #DEDEDE;
+    }
+
+    pre code {
+        background-color: #fff!important;
+        overflow: visible;
+    }
+
+    pre {
+        background: #fff;
+    }
+}
+
+@media screen {
+
+    ::selection {
+        background: rgba(157, 193, 200,.5)
+    }
+
+    h1::selection {
+        background-color: rgba(45, 156, 208, .3)
+    }
+
+    h2::selection {
+        background-color: rgba(90, 182, 224, .3)
+    }
+
+    h3::selection,
+    h4::selection,
+    h5::selection,
+    h6::selection,li::selection,ol::selection {
+        background-color: rgba(133, 201, 232, .3)
+    }
+
+    code::selection {
+        background-color: rgba(0,0,0,.7);
+        color: #eee
+    }
+
+    code span::selection {
+        background-color: rgba(0,0,0,.7) !important;
+        color: #eee !important
+    }
+
+    a::selection {
+        background-color: rgba(255, 230, 102,.2)
+    }
+
+    td::selection,th::selection,caption::selection {
+        background-color: rgba(180, 237, 95, .5);
+    }
+}
+
+em em {
+    font-style: normal;
+}
+
+#criticnav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-shadow: 0 1px 1px 1px #777;
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    font-size: 12px;
+}
+
+#criticnav ul {
+    list-style-type: none;
+    width: 90%;
+    margin: 0 auto;
+    padding: 0;
+}
+
+#criticnav ul li {
+    display: block;
+    width: 33%;
+    text-align: center;
+    padding: 10px 0 5px!important;
+    margin: 0 !important;
+    line-height: 1em;
+    float: left;
+    border-left: 1px solid #ccc;
+    text-transform: uppercase;
+}
+
+#criticnav ul li:before {
+    content: none !important;
+}
+
+#criticnav ul li#edited-button {
+    border-right: 1px solid #ccc;
+}
+
+#criticnav ul li.active {
+    background-image: -webkit-linear-gradient(top, white, #cccccc)
+}
+
+.original del {
+    
+        text-decoration: none;
+}   
+
+.original ins,
+.original span.popover,
+.original ins.break {
+    display: none;
+}
+
+.edited ins {
+    
+        text-decoration: none;
+}   
+
+.edited del,
+.edited span.popover,
+.edited ins.break {
+    display: none;
+}
+
+.original mark,
+.edited mark {
+    background-color: transparent;
+}
+
+.markup mark {
+    background-color: #fffd38;
+    text-decoration: none;
+}
+
+.markup del {
+    background-color: #f6a9a9;
+    text-decoration: none;
+}
+
+.markup ins {
+    background-color: #a9f6a9;
+    text-decoration: none;
+}
+
+.markup ins.break {
+    display: block;
+    line-height: 2px;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.markup ins.break span {
+    line-height: 1.5em;
+}
+
+.markup .popover {
+    background-color: #4444ff;
+    color: #fff;
+}
+
+.markup .popover .critic.comment {
+    display: none;
+}
+
+.markup .popover:hover span.critic.comment {
+    display: block;
+    position: absolute;
+    width: 200px;
+    left: 30%;
+    font-size: 0.8em; 
+    color: #ccc;
+    background-color: #333;
+    z-index: 10;
+    padding: 0.5em 1em;
+    border-radius: 0.5em;
+}
+</style>
+
+
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+
+
+
+</head>
+
+<body class="normal">
+    <div id="wrapper">
+
+<h1 id="ch5"><a href="#ch5">RMT4 Chapter 5 - Linear Quadratic Dynamic Programming</a></h1>
+<p>This chapter will talk about dynamic programming problems where the return functions are quadratic and the transition functions are linear.</p>
+<h2 id="optimlinreg"><a href="#optimlinreg">The optimal linear regulator problem</a></h2>
+<p>The undiscounted optimal linear regulator problem is to maximize over choice of <span class="math">\(m\{u_t\}_{t=0}^{\infty}\)</span> the criterion</p>
+<p><span class="math">\[ - \sum_{t=0}^{\infty} \{x_t&#39; R x_t + u_t&#39; Q u_t \} \]</span></p>
+<p>We guess that the value function is quadratic, <span class="math">\(V(x) = - x&#39;Px\)</span>. Some algebra covered in the book yields the algebraic matrix Riccati equation and the solution for <span class="math">\(P\)</span>:</p>
+<p><span class="math">\[P = R + A&#39;PA - A&#39;RB(Q + B&#39;PB)^{-1}B&#39;PA\]</span></p>
+<h3 id="vfi"><a href="#vfi">Value function iteration</a></h3>
+<p>In specific cases there is a unique positive definite matrix <span class="math">\(P\)</span> that defines the solution to the matrix Riccati equation above. This is found by iterating on that equation by saying</p>
+<p><span class="math">\[P_{j+1} = R + A&#39;P_jA - A&#39;RB(Q + B&#39;P_jB)^{-1}B&#39;P_jA\]</span></p>
+<p>Starting at <span class="math">\(P_0 = 0\)</span>.</p>
+<h3 id="dislinreg"><a href="#dislinreg">Discounted linear regulator problem</a></h3>
+<p>The discounted optimal linear regulator problem and its matrix Riccati difference equation appear below</p>
+<p><span class="math">\[ - \sum_{t=0}^{\infty} \beta_t \{x_t&#39; R x_t + u_t&#39; Q u_t \}, \quad 0 &lt; \beta &lt;  1 \]</span></p>
+<p><span class="math">\[P_{j+1} = R + \beta A&#39;P_jA - \beta^2 A&#39;RB(Q + B&#39;P_jB)^{-1}B&#39;P_jA\]</span></p>
+<p>The Matlab program <code>olrp.m</code> solves the discounted optimal linear regulator problem.</p>
+<h3 id="policyalgo"><a href="#policyalgo">Policy improvement algorithm</a></h3>
+<p>The policy improvement algorithm (Howards’ improvement algorithm) can be applied by iterating on the following two equations, assuming we have a starting <span class="math">\(F_0\)</span> and know that all the eigenvalues of <span class="math">\(A - BF_0\)</span> are bounded below <span class="math">\(\frac{1}{\sqrt{\beta}}\)</span> in modulus:</p>
+<p><span class="math">\[P_j = R + F_j&#39;Qf_j + \beta (A - BF_j)&#39;P(A-BF_j)\]</span></p>
+<p><span class="math">\[F_{j+1} = \beta(Q + \beta B&#39;P_jB)^{-1}B&#39;P_jA\]</span></p>
+<p>The equation for <span class="math">\(P_j\)</span> above is a discrete Lyapunov or Sylvester equation and can be solved for <span class="math">\(P_j\)</span> using the function <code>doublej</code>. This <span class="math">\(P_j\)</span> gives the associated value (<span class="math">\(V(x) = -x&#39;P_jx\)</span>) of applying the policy <span class="math">\(F_j\)</span> forever. The solution to this system can be represented as</p>
+<p><span class="math">\[P_j =\sum_{k=0}^{\infty} \beta^k (A - B F_j)^{&#39;k}(R + F_j&#39;QF_j) (A - BF_j)^k\]</span></p>
+<p>As long as the eigenvalues of <span class="math">\(A - BF_j\)</span> are bounded below <span class="math">\(\frac{1}{\sqrt{\beta}}\)</span> in modulus, then a solution exists. The function <code>policyi</code> solves the un-discounted optimal linear regulator problem using policy iteration.</p>
+<h2 id="stochlinreg"><a href="#stochlinreg">The stochastic optimal linear regulator problem</a></h2>
+<p>The stochastic discounted optimal linear regulator problem is to choose a decision rule for <span class="math">\(u_t\)</span> to maximize</p>
+<p><span class="math">\[ - E_0\sum_{t=0}^{\infty} \beta_t \{x_t&#39; R x_t + u_t&#39; Q u_t \}, \quad 0 &lt; \beta &lt;  1\]</span></p>
+<p>subject to a given <span class="math">\(x_0\)</span> and the following law of motion for x:</p>
+<p><span class="math">\[x_{t+1} = Ax_t + Bu_t  + C \epsilon_{t+1}\]</span></p>
+<p>where <span class="math">\(\epsilon_{t+1} \sim N(0, I)\)</span> is an <span class="math">\((n \times 1)\)</span> vector of iid random variables.</p>
+<p>The new value function for this problem is</p>
+<p><span class="math">\[ v(x) = -x&#39;Px - d \]</span></p>
+<p>Where <span class="math">\(P\)</span> is the equation from the <a href="#dislinreg">discounted section</a> and the scalar <span class="math">\(d\)</span> is given by</p>
+<p><span class="math">\[d = \beta (1 - \beta)^{-1} \text{trace}(PCC&#39;)\]</span></p>
+<p>The value of <span class="math">\(u_t = - F x_t\)</span> is still defined by the matrix <span class="math">\(F\)</span> from the <a href="#policyalgo">policy algorithm section</a>.</p>
+<p>The <strong>Certainty Equivalence Principle</strong> holds here because the solutions <span class="math">\(F\)</span> for the stochastic and non-stochastic discounted optimal linear regulator problems are the same (stochastic part doesn’t change the policy).</p>
+<h3 id="certiantyequiv"><a href="#certiantyequiv">Discussion of certainty equivalence</a></h3>
+<p>It is quite remarkable that although the objective function depends on <span class="math">\(CC&#39;\)</span> (through <span class="math">\(d\)</span>), the solution is independent of <span class="math">\(CC&#39;\)</span>. Another way to think of this is that the optimal decision rule <span class="math">\(u_t = h(x_t)\)</span> is <em>independent</em> of the problem’s noise statistics.</p>
+<p>Certainty equivalence is a special property we get here because we designed the problem as such; certainty equivalence is <em>not</em> generally true of stochastic control problems!</p>
+<h2 id="shadows"><a href="#shadows">Shadow prices in the linear regulator</a></h2>
+<p>The gradient of the value function (either <span class="math">\(v(x) = -x&#39;Px -d\)</span> or <span class="math">\(v(x) = - x&#39;Px\)</span>) is <span class="math">\(-2Px\)</span>. This gradient can be interpreted as a shadow price or Lagrangian multiplier. To show this, we will express the Bellman function as a Lagrangian:</p>
+<p><span class="math">\[ - x_t&#39;Px_t = V(x_t) -= \min_{\mu_{t + 1}} \max_{u_t, x_{t+1}} - \left\{x_t&#39; R x_t  + u_t&#39;Q u_t + x_{t+1}&#39; P x_{t+1} + 2 \mu_{t+1}&#39; \left[A x_t + B u_t  -x_{t+1} \right] \right\}\]</span></p>
+<p>where <span class="math">\(2 \mu_{t+1}\)</span> is a vector of Lagrange multipliers. The first order necessary conditions for an optimum with respect to <span class="math">\(u_t\)</span> and <span class="math">\(x_{t+1}\)</span> are, respectively</p>
+<p><span class="math">\[
+\begin{align}
+2 Q u_t + 2 B&#39; \mu_{t+1} &amp;= 0\\
+2 P x_{t+1} - 2 \mu_{t+1}  &amp;= 0
+\end{align}
+\]</span></p>
+<p>This implies the following value for the shadow price vector:</p>
+<p><span class="math">\[\mu_{t+1} = P x_{t+1}\]</span></p>
+<h3 id="stable"><a href="#stable">Stability</a></h3>
+<p>When the optimal control selection <span class="math">\(u_t = - F x_t\)</span> is substituted into the law of motion <span class="math">\(x_{t+1} = A x_t + B u_t\)</span>, we can obtain the optimal <em>closed loop system</em> represented as <span class="math">\(x_{t+1} = (A - BF) x_t\)</span>. This governs the evolution of <span class="math">\(x_t\)</span>.</p>
+<p>As explained in this section of the book, the matrix <span class="math">\((A - BF)\)</span> is considered stable if all its eigenvalues are strictly less than unity in absolute value. When that matrix is stable, <span class="math">\(\lim_{x \rightarrow \infty} x_t = 0\)</span>.</p>
+<p>A case optimal control literature is dedicated to pinning down conditions for matrices <span class="math">\(A, B,Q\)</span> and <span class="math">\(R\)</span> so that <span class="math">\(F\)</span> leads to an optimal control closed-loop system (See <span class="citation">Anderson et al. (1996)</span> for more info).</p>
+<h2 id="a-lagrangian-formulation"><a href="#a-lagrangian-formulation">A Lagrangian formulation</a></h2>
+<p>Formulating the optimal linear regulator in this way has computational benefits as well as the ability to make connections between stability and optimality.</p>
+<p>For the undiscounted problem, the Lagrangian is</p>
+<p><span class="math">\[ \mathscr{L} = - \sum_{t = 0}^{\infty} \left\{x_t&#39; R x_t + u_t&#39; Q u_t + 2 \mu_{t+1} \left[A x_t  + B u_t - x_{t+1} \right] \right\}\]</span></p>
+<p>The first order conditions with respect to <span class="math">\(u_t\)</span> and <span class="math">\(x_{t+1}\)</span> are</p>
+<p><span class="math">\[
+\begin{align}
+0 &amp;= 2 Q u_t + 2 B&#39; \mu_{t+1} \\
+\mu_t &amp;= R x_t + A&#39;\mu_{t+1}, \quad t \ge 0
+\end{align}
+\]</span></p>
+<p>The Lagrange multiplier vector <span class="math">\(\mu_{t+1}\)</span> is often called the costate vector.</p>
+<p>We can use the expression for <span class="math">\(\mu_{t+1}\)</span> that we obtained in the <a href="#shadows">shadow pricing section</a>: <span class="math">\(\mu_{t+1} = P x_{t+1}\)</span>. We can then solve the equation above for <span class="math">\(\mu_t\)</span> in terms of <span class="math">\(\mu_{t+1}\)</span>, substitute in the optimal condition and the law of motion for <span class="math">\(x\)</span> to get the system above into the following matrix form:</p>
+<p><span class="math">\[ L \begin{pmatrix}x_{t+1} \\ \mu_{t+1} \end{pmatrix} = N \begin{pmatrix}x_t \\ \mu_t \end{pmatrix}, \quad t \ge 0\]</span></p>
+<p>where</p>
+<p><span class="math">\[L= \begin{pmatrix}I &amp; B Q^{-1}B&#39; \\ 0 &amp; A&#39; \end{pmatrix}, \quad N = \begin{pmatrix}A &amp; 0 \\ -R &amp; I \end{pmatrix}\]</span></p>
+<p>When <span class="math">\(L\)</span> is invertible, we can write this system as</p>
+<p><span class="math">\[ \begin{pmatrix}x_{t+1} \\ \mu_{t+1} \end{pmatrix} = M \begin{pmatrix}x_t \\ \mu_t \end{pmatrix} \]</span></p>
+<p>where <span class="math">\(M\)</span> is the <span class="math">\((2 \times 2)\)</span> matrix:</p>
+<p><span class="math">\[ M = L^{-1} N = \begin{pmatrix} A + BQ^{-1}B&#39;A^{&#39;-1}R &amp; -BQ^{-1}B&#39;A^{&#39;-1} \\ -A^{&#39;-1}R &amp; A^{&#39;-1}\end{pmatrix}\]</span></p>
+<p>I now introduce a new matrix <span class="math">\(J\)</span>, which is of rank <span class="math">\(2n\)</span>:</p>
+<p><span class="math">\[J = \begin{pmatrix}0 &amp; -I_n \\ I_n &amp; 0 \end{pmatrix}\]</span></p>
+<p>The matrix <span class="math">\(M\)</span> is called <em>symplectic</em> if</p>
+<p><span class="math">\[MJM&#39; = J\]</span></p>
+<p>Our matrix <span class="math">\(M\)</span> is symplectic, which means that its eigenvalues come in reciprocal pairs (this comes from the above equation – think about it). We can define a new variable <span class="math">\(y_t = \left(\begin{smallmatrix} x_t \\ \mu_t\end{smallmatrix} \right)\)</span> and write the following triangularization of <span class="math">\(M\)</span>:</p>
+<p><span class="math">\[V^{-1}MV = \begin{pmatrix}W_{11} &amp; W_{12} \\ 0 &amp; W_{22} \end{pmatrix}\]</span></p>
+<p>where each block on the RHS is and <span class="math">\((n \times n)\)</span> matrix, <span class="math">\(V\)</span> is non-singular, all the eigenvalues of <span class="math">\(W_{22}\)</span> are greater than 1 in modulus and all eigenvalues of <span class="math">\(W_{11}\)</span> are less than 1 in modulus. The Schur and eigenvalue decomposition both follow these properties. Note also that the function <code>scipy.linalg.schur</code> provides the Shcur decomposition.</p>
+<p>We can then write our first order conditions in terms of <span class="math">\(y, V\)</span>, and <span class="math">\(W\)</span> as follows.</p>
+<p><span class="math">\[
+\begin{align}
+\begin{pmatrix}x_{t+1} \\ \mu_{t+1} \end{pmatrix} &amp;= M \begin{pmatrix}x_t \\ \mu_t \end{pmatrix}\\
+y_{t+1} &amp;= M y_t \\
+y_{t+1} &amp;= V W V^{-1} y_t
+\end{align}
+\]</span></p>
+<p>There is some more algebra in the book, but the result is that we can find the optimal value of <span class="math">\(P\)</span> via the expression</p>
+<p><span class="math">\[P + V{21}V_{11}^{-1}\]</span></p>
+<p>This method of finding <span class="math">\(P\)</span> is generally very efficient computationally.</p>
+<h2 id="kalman2"><a href="#kalman2">The Kalman filter again</a></h2>
+<p>As described in RMT4 chapter 2, the Kalman filter is a recursive algorithm for computing the mathematical expectation <span class="math">\(E\left[x_t|y_{t+1}, \dots, y_0 \right]\)</span> of a hidden state vector <span class="math">\(x_t\)</span> conditional on observing a history of a vector of noisy signals on the state <span class="math">\(y_t\)</span>.</p>
+<p>It turns out that the same recursion we used in the <a href="#vfi">value function iteration section</a> to solve the optimal linear regulator also determines the Kalman filter. The required algebra to prove this is quite tedious, but it can be done.</p>
+<p>The Matlab program <code>kfilter.m</code> computes the Kalman filter.</p>
+<h2 id="matrixeq"><a href="#matrixeq">Matrix equations</a></h2>
+<p>Let (z,x,a) each be <span class="math">\(n \times 1\)</span> vectors, A,C,D, and V each be (<span class="math">\(n \times n\)</span>) matrices, B an (<span class="math">\(m \times n\)</span>) matrix,and y an (<span class="math">\(m \times 1\)</span>) vector. The the following derivatives are valid:</p>
+<ul>
+<li><span class="math">\(\frac{\partial a&#39;x}{\partial x} = a\)</span></li>
+<li><span class="math">\(\frac{\partial x&#39;A x}{\partial x} = (A + A&#39;)x\)</span></li>
+<li><span class="math">\(\frac{\partial ^2 x&#39;A x}{\partial x \partial x&#39;} = (A + A&#39;)\)</span></li>
+<li><span class="math">\(\frac{\partial x&#39;Ax}{\partial A} = xx&#39;\)</span></li>
+<li><span class="math">\(\frac{\partial y&#39;Bz}{\partial y} = Bz\)</span></li>
+<li><span class="math">\(\frac{\partial y&#39;Bz}{\partial z} B&#39;y\)</span></li>
+<li><span class="math">\(\frac{\partial y&#39;Bz}{\partial B} = yz&#39;\)</span></li>
+</ul>
+<p>The <strong>disrete Lyapuov equation</strong> is defined as follows when trying to solve for <span class="math">\(V\)</span>:</p>
+<p><span class="math">\[ A&#39;V A + C = V\]</span></p>
+<p>A generalization of this is the <strong>discrete Sylvester equation</strong>:</p>
+<p><span class="math">\[A&#39;V D + C = V\]</span></p>
+<p>The discrete Sylvester equation has a unique solution iff the eigenvalues <span class="math">\(\{\lambda_i\}\)</span> of <span class="math">\(A\)</span> and <span class="math">\(\{\delta_i\}\)</span> of <span class="math">\(D\)</span> satisfy the condition that <span class="math">\(\lambda_i \delta_i \ne 1 \forall i, j\)</span>.</p>
+<h3 id="solving-with-slycot"><a href="#solving-with-slycot">Solving with <code>slycot</code></a></h3>
+<p><code>slycot</code> is a Python wrapper around the Fortran routines in <code>SLICOT</code> (Subroutine Library In COntrol Theory). <code>slycot</code> exposes highly optimized, stable, and numerically accurate Fortran routines for solving Riccati, Sylvester, and Lyapuov equations. I describe the pertinent routines here.</p>
+<ul>
+<li><code>slycot.sb04qd</code>: This routine solve <em>discrete Sylvester equations</em>. The <code>SLICOT</code> docs say it solves for <span class="math">\(X\)</span> in the form <span class="math">\(X + AXB = C\)</span>, where the <code>slycot</code> docstrings say the form is<span class="math">\(AXB + X + C = 0\)</span>. I don’t think it matters (TODO: verify this). Also, it is presented in a slightly different form than above. The equations above can be transformed into this form, but I am not sure whether or not that is necessary (TODO: verify this also).</li>
+<li>TODO: Document other routines for Lyapuov and Riccati equations</li>
+</ul>
+<h1 id="references"><a href="#references">References</a></h1>
+<p>Anderson, Evan W., Ellen R. McGrattan, Lars Peter Hansen, and Thomas J. Sargent. 1996. “Mechanics of forming and estimating dynamic linear economies.” In <em>Handbook of Computational Economics</em>, ed. H. M. Amman, D. A. Kendrick, and J. Rust, 1:171–252. 1st ed.. Elsevier. <a href="http://EconPapers.repec.org/RePEc:eee:hecchp:1-04" title="http://EconPapers.repec.org/RePEc:eee:hecchp:1-04">http://EconPapers.repec.org/RePEc:eee:hecchp:1-04</a>.</p>
+
+    </div>
+
+
+
+</body>
+</html>

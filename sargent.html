@@ -1,0 +1,771 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>sargent</title>
+<!-- 2013-07-21 Sun 16:22 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012  Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js"></script>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "center",
+        displayIndent: "2em",
+
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">sargent</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Rtm4</a>
+<ul>
+<li><a href="#sec-1-1">1.1. Chapter 11: Fiscal Policies in a Growth Model</a>
+<ul>
+<li><a href="#sec-1-1-1">1.1.1. Non-stochastic model</a>
+<ul>
+<li><a href="#sec-1-1-1-1">1.1.1.1. Households and Technology</a></li>
+<li><a href="#sec-1-1-1-2">1.1.1.2. Equilibrium</a></li>
+<li><a href="#sec-1-1-1-3">1.1.1.3. Term structure of interest rates</a></li>
+<li><a href="#sec-1-1-1-4">1.1.1.4. Equilibrium</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-1-2">1.1.2. Term structure of interest rates</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec-2">2. Marching Orders, number 1 <code>[4/4]</code></a>
+<ul>
+<li><a href="#sec-2-1">2.1. Read Chapter 2 of RMT4</a></li>
+<li><a href="#sec-2-2">2.2. Read the two techincal appendixes</a></li>
+<li><a href="#sec-2-3">2.3. Work exercises 2.1-2.5</a></li>
+<li><a href="#sec-2-4">2.4. Think of python examples</a>
+<ul>
+<li><a href="#sec-2-4-1">2.4.1. Re-create <code>markov.m</code> and other Matlab programs</a></li>
+<li><a href="#sec-2-4-2">2.4.2. Add Baysean estimation to dolo.</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec-3">3. Other Tasks</a></li>
+<li><a href="#sec-4">4. z-transform  <code>[1/2]</code></a>
+<ul>
+<li><a href="#sec-4-1">4.1. Read Z-transform document</a>
+<ul>
+<li><a href="#sec-4-1-1">4.1.1. Notes</a></li>
+<li><a href="#sec-4-1-2">4.1.2. Tom's PV Notes</a></li>
+</ul>
+</li>
+<li><a href="#sec-4-2">4.2. Teaching module</a></li>
+</ul>
+</li>
+<li><a href="#sec-5">5. Dynare -&gt; python = dolo <code>[0/2]</code></a>
+<ul>
+<li><a href="#sec-5-1">5.1. Read RMT4 chapter 11</a></li>
+<li><a href="#sec-5-2">5.2. Matlab+Dynare -&gt; python+dolo</a></li>
+</ul>
+</li>
+<li><a href="#sec-6">6. Marching orders, number 2</a>
+<ul>
+<li><a href="#sec-6-1">6.1. Read RMT4 Chapter 11</a></li>
+<li><a href="#sec-6-2">6.2. Work problems RMT4 2.6, 2.10. 2.14, 2.17, 2.20, 2.24</a></li>
+<li><a href="#sec-6-3">6.3. Replicate figure 11.9.1 in RMT4 (page 401)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><a id="ID-C5EF6281-CA55-40A9-A689-6E9A060412DC" name="ID-C5EF6281-CA55-40A9-A689-6E9A060412DC"></a><span class="section-number-2">1</span> Rtm4</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Chapter 11: Fiscal Policies in a Growth Model</h3>
+<div class="outline-text-3" id="text-1-1">
+</div><div id="outline-container-sec-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1"><span class="section-number-4">1.1.1</span> Non-stochastic model</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+General Items:
+</p>
+
+<ul class="org-ul">
+<li>No uncertainty (non-stochastic) and decision makers all have perfect foresight.
+</li>
+</ul>
+</div>
+<div id="outline-container-sec-1-1-1-1" class="outline-5">
+<h5 id="sec-1-1-1-1"><span class="section-number-5">1.1.1.1</span> Households and Technology</h5>
+<div class="outline-text-5" id="text-1-1-1-1">
+<p>
+There is a representative household that maximizes over non-negative streams of a single consumption good \(c_t\) and leisure \(1 - n_t\). The ordering is given by $$\sum_{t=0}^{\infty} \beta^t U(c_t, 1 - n_t), \quad \beta \in (0, 1)$$  where \(U\) is strictly increasing in \(c_t\) and \(1 - n_t\), twice continuously differentiable and strictly concave. We require that \(c_t \ge 0\) and that \(n_t \in [0, 1]\). For now we will assume that $$U(c, t - n) = u(c) + u(1 - n).
+</p>
+
+<p>
+Technology is
+</p>
+\begin{align}
+ g_t + c_t + x_t &\le F(k_t, n_t) \\
+k_{t+1} &= (1 - \delta) k_t + x_t
+\end{align}
+<p>
+Where \(\delta \in (0, 1)\) is a depreciation rate, \(K_t\) is the stock of physical capital, \(x_t\) is gross investment and \(F(k, n)\) is a linearly homogeneous production function with positive and decreasing marginal products of capital and labor. This can be simplified to a single by substituting out the $x<sub>4</sub>: $$g_t + c_t + k_{t+1} \le F(k_t, n_t)  + (1 - \delta) k_t$$
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-1-1-2" class="outline-5">
+<h5 id="sec-1-1-1-2"><span class="section-number-5">1.1.1.2</span> Equilibrium</h5>
+<div class="outline-text-5" id="text-1-1-1-2">
+<p>
+The household owns capital, makes investment decisions, and rents capital and labor to the firm. There is a price system that is a triple of sequences: \(\{ q_t, \eta_t, w_t \} _{t=0}^{\infty}\) where \(q_t\) is the time 0 pre-tax price of one unit of investment at time t (\(x_t\) or \(c_t\)), \(\eta_t\) is the pre-tax time at time \(t\), that household receives from renting capital to the firm in period \(t\), and @w<sub>t</sub>@ is the pre-tax labor wage.
+</p>
+
+<p>
+In equilibrium the household faces the budget constraint
+</p>
+
+<p>
+$$\sum_{t=0}^{\infty} q_t \{(1 + \tau_{ct})c_t + [k_{t+1} - (1 - \delta)k_t]\} \le \sum_{t=0}^{\infty} q_t \{ \eta_t k_t - \tau_{kt}(\eta_t  - \delta_t)k_t + (1 - \tau_{nt})w_t n_t - \tau_{ht}\}$$
+</p>
+
+<p>
+The government has a budget constraint $$\sum_{t=0}^{\infty} q_t g_t \le \sum_{t=0}^{\infty} q_t \{ \tau_{ct}c_T + \tau_{kt}(\eta_t - \delta) k_t + \tau_{nt} w_t n_t + \tau_{ht}\}$$
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-1-1-3" class="outline-5">
+<h5 id="sec-1-1-1-3"><span class="section-number-5">1.1.1.3</span> Term structure of interest rates</h5>
+<div class="outline-text-5" id="text-1-1-1-3">
+<p>
+The prices system \(\{q_t\}_{t=0}^{\infty}\) maximizes over non-negative streams of a single consumption good \(c_t\) and leisure \(1 - n_t\). The ordering is given by $$\sum_{t=0}^{\infty} \beta^t U(c_t, 1 - n_t), \quad \beta \in (0, 1)$$  where \(U\) is strictly increasing in \(c_t\) and \(1 - n_t\), twice continuously differentiable and strictly concave. We require that \(c_t \ge 0\) and that \(n_t \in [0, 1]\). For now we will assume that $$U(c, t - n) = u(c) + u(1 - n).
+</p>
+
+<p>
+Technology is
+</p>
+\begin{align}
+ g_t + c_t + x_t &\le F(k_t, n_t) \\
+k_{t+1} &= (1 - \delta) k_t + x_t
+\end{align}
+<p>
+Where \(\delta \in (0, 1)\) is a depreciation rate, \(K_t\) is the stock of physical capital, \(x_t\) is gross investment and \(F(k, n)\) is a linearly homogeneous production function with positive and decreasing marginal products of capital and labor. This can be simplified to a single by substituting out the $x<sub>4</sub>: $$g_t + c_t + k_{t+1} \le F(k_t, n_t)  + (1 - \delta) k_t$$
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-1-1-4" class="outline-5">
+<h5 id="sec-1-1-1-4"><span class="section-number-5">1.1.1.4</span> Equilibrium</h5>
+<div class="outline-text-5" id="text-1-1-1-4">
+<p>
+The household owns capital, makes investment decisions, and rents capital and labor to the firm. There is a price system that is a triple of sequences: \(\{ q_t, \eta_t, w_t \} _{t=0}^{\infty}\) where \(q_t\) is the time 0 pre-tax price of one unit of investment at time t (\(x_t\) or \(c_t\)), \(\eta_t\) is the pre-tax time at time \(t\), that household receives from renting capital to the firm in period \(t\), and @w<sub>t</sub>@ is the pre-tax labor wage.
+</p>
+
+<p>
+In equilibrium the household faces the budget constraint
+</p>
+
+<p>
+$$\sum_{t=0}^{\infty} q_t \{(1 + \tau_{ct})c_t + [k_{t+1} - (1 - \delta)k_t]\} \le \sum_{t=0}^{\infty} q_t \{ \eta_t k_t - \tau_{kt}(\eta_t  - \delta_t)k_t + (1 - \tau_{nt})w_t n_t - \tau_{ht}\}$$
+</p>
+
+<p>
+The government has a budget constraint $$\sum_{t=0}^{\infty} q_t g_t \le \sum_{t=0}^{\infty} q_t \{ \tau_{ct}c_T + \tau_{kt}(\eta_t - \delta) k_t + \tau_{nt} w_t n_t + \tau_{ht}\}$$
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2"><span class="section-number-4">1.1.2</span> Term structure of interest rates</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+The prices system \(\{q_t\}_{t=0}^{\infty}\) evidently embeds within it a term structure of interest rates. It is convenient to represent \(q_t\) as
+</p>
+
+\begin{align}
+q_t &= q_0 \frac{q_1}{1_0} \frac{q_2}{q_1} \cdots \frac{q_t}{q_{t-1}} \\
+&= q_0 m_{0, 1} m_{0, 2} \cdots m_{t-1, t}
+\end{align}
+
+<p>
+where \(m_{t, t+1} = \frac{q_{t+1}}{q_t}\). We can represent the one-period discount factor \(m_{t, t+1}\) as $$m_{t, t+1} = R_{t, t+1}^{-1} = \frac{1}{1 + r_{t, t+1}} \approx \exp(-r_{t, t+1})$$
+</p>
+
+<p>
+THERE IS MUCH MORE IN THE BOOK, BUT I HAVE PRETTY MUCH BEEN WRITING EVERYTHING AND THAT IS DUMB
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><a id="ID-465B4AC3-AE20-4255-A252-CCABA15ECC0F" name="ID-465B4AC3-AE20-4255-A252-CCABA15ECC0F"></a><span class="section-number-2">2</span> <span class="done DONE">DONE</span> Marching Orders, number 1 <code>[4/4]</code></h2>
+<div class="outline-text-2" id="text-2">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption align="above"><span class="table-number">Table 1:</span> Clock summary at <span class="timestamp-wrapper"><span class="timestamp">[2013-07-18 Thu 00:36]</span></span></caption>
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Headline</th>
+<th scope="col" class="left">Time</th>
+<th scope="col" class="right">&#xa0;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left"><b>Total time</b></td>
+<td class="left"><b>1d 6:46</b></td>
+<td class="right">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">DONE [#A] Marching Orders, number 1&#x2026;</td>
+<td class="left">1d 6:46</td>
+<td class="right">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">\__ DONE [#A] Read Chapter 2 of RMT4</td>
+<td class="left">&#xa0;</td>
+<td class="right">17:42</td>
+</tr>
+
+<tr>
+<td class="left">\__ DONE [#B] Read the two techincal&#x2026;</td>
+<td class="left">&#xa0;</td>
+<td class="right">1:13</td>
+</tr>
+
+<tr>
+<td class="left">\__ DONE [#A] Work exercises 2.1-2.5</td>
+<td class="left">&#xa0;</td>
+<td class="right">11:51</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><a id="ID-760A6784-366A-4821-93C7-2CEAFB536B46" name="ID-760A6784-366A-4821-93C7-2CEAFB536B46"></a><span class="section-number-3">2.1</span> <span class="done DONE">DONE</span> Read Chapter 2 of RMT4</h3>
+<div class="outline-text-3" id="text-2-1">
+
+<p>
+I should probably look over section 2.4.5.2 again. It was a bit
+complicated and I couldn't replicate its results on my own.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><a id="ID-39103168-00D5-4C92-A89B-28735E991612" name="ID-39103168-00D5-4C92-A89B-28735E991612"></a><span class="section-number-3">2.2</span> <span class="done DONE">DONE</span> Read the two techincal appendixes</h3>
+<div class="outline-text-3" id="text-2-2">
+</div>
+</div>
+
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3"><a id="ID-A9654E4F-F041-40C0-B858-2AC5372AA8D2" name="ID-A9654E4F-F041-40C0-B858-2AC5372AA8D2"></a><span class="section-number-3">2.3</span> <span class="done DONE">DONE</span> Work exercises 2.1-2.5</h3>
+<div class="outline-text-3" id="text-2-3">
+</div>
+</div>
+
+<div id="outline-container-sec-2-4" class="outline-3">
+<h3 id="sec-2-4"><a id="ID-1B53EA77-B3C1-4564-AEFD-60DC37A6B19D" name="ID-1B53EA77-B3C1-4564-AEFD-60DC37A6B19D"></a><span class="section-number-3">2.4</span> <span class="done DONE">DONE</span> Think of python examples</h3>
+<div class="outline-text-3" id="text-2-4">
+</div>
+
+<div id="outline-container-sec-2-4-1" class="outline-4">
+<h4 id="sec-2-4-1"><a id="ID-804E4C2C-BE54-4DD8-AB4A-7F8D22676AED" name="ID-804E4C2C-BE54-4DD8-AB4A-7F8D22676AED"></a><span class="section-number-4">2.4.1</span> <span class="todo HOLD">HOLD</span> Re-create <code>markov.m</code> and other Matlab programs&#xa0;&#xa0;&#xa0;<span class="tag"><span class="WAITING">WAITING</span>&#xa0;<span class="HOLD">HOLD</span></span></h4>
+<div class="outline-text-4" id="text-2-4-1">
+<ul class="org-ul">
+<li>State "HOLD"       from "WAITING"    <span class="timestamp-wrapper"><span class="timestamp">[2013-07-13 Sat 09:55]</span></span> <br  />
+  Talk with Tom about this first
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-2-4-2" class="outline-4">
+<h4 id="sec-2-4-2"><a id="ID-ED5A9CBF-F975-4211-A0F2-BB1DA8767C37" name="ID-ED5A9CBF-F975-4211-A0F2-BB1DA8767C37"></a><span class="section-number-4">2.4.2</span> <span class="todo HOLD">HOLD</span> Add Baysean estimation to dolo.&#xa0;&#xa0;&#xa0;<span class="tag"><span class="WAITING">WAITING</span>&#xa0;<span class="HOLD">HOLD</span></span></h4>
+<div class="outline-text-4" id="text-2-4-2">
+<ul class="org-ul">
+<li>State "HOLD"       from ""           <span class="timestamp-wrapper"><span class="timestamp">[2013-07-13 Sat 09:56]</span></span> <br  />
+  Talk to Tom about this first
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><a id="ID-85994194-6129-47F0-8A82-CDBD953937C1" name="ID-85994194-6129-47F0-8A82-CDBD953937C1"></a><span class="section-number-2">3</span> Other Tasks</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+:ID:       52FF1153-D302-45E5-8D10-C24FA0BF9766
+:END:
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><a id="ID-2016BB11-A846-44F1-821F-8ACB73DE0146" name="ID-2016BB11-A846-44F1-821F-8ACB73DE0146"></a><span class="section-number-2">4</span> <span class="todo TODO">TODO</span> z-transform  <code>[1/2]</code>&#xa0;&#xa0;&#xa0;<span class="tag"><span class="TOM">TOM</span></span></h2>
+<div class="outline-text-2" id="text-4">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption align="above"><span class="table-number">Table 2:</span> Clock summary at <span class="timestamp-wrapper"><span class="timestamp">[2013-07-18 Thu 12:07]</span></span></caption>
+
+<colgroup>
+<col  class="left" />
+
+<col  class="right" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Headline</th>
+<th scope="col" class="right">Time</th>
+<th scope="col" class="left">&#xa0;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left"><b>Total time</b></td>
+<td class="right"><b>14:40</b></td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">TODO z-transform  [1/2]</td>
+<td class="right">14:40</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">\__ DONE Read Z-transform document</td>
+<td class="right">&#xa0;</td>
+<td class="left">3:40</td>
+</tr>
+
+<tr>
+<td class="left">\__ TODO Teaching module</td>
+<td class="right">&#xa0;</td>
+<td class="left">10:49</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Tom asked us to read <a href="file:///Users/sglyon/School/NYU/NYUclasses/Sargent/ZTransform.pdf">ZTransform.pdf</a> in this <a href="https://mail.google.com/mail/u/0/#inbox/13fca56945575292">email</a>.
+</p>
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">[2013-07-10 Wed 23:20]</span></span>
+</p>
+</div>
+<div id="outline-container-sec-4-1" class="outline-3">
+<h3 id="sec-4-1"><a id="ID-5C001ED4-2035-4019-9761-0D8FE34591DF" name="ID-5C001ED4-2035-4019-9761-0D8FE34591DF"></a><span class="section-number-3">4.1</span> <span class="done DONE">DONE</span> Read Z-transform document&#xa0;&#xa0;&#xa0;<span class="tag"><span class="READING">READING</span></span></h3>
+<div class="outline-text-3" id="text-4-1">
+</div>
+<div id="outline-container-sec-4-1-1" class="outline-4">
+<h4 id="sec-4-1-1"><span class="section-number-4">4.1.1</span> Notes&#xa0;&#xa0;&#xa0;<span class="tag"><span class="NOTES">NOTES</span></span></h4>
+<div class="outline-text-4" id="text-4-1-1">
+<ul class="org-ul">
+<li>Definition of <b>the one sided z-transform</b>: $$X(z) = \sum_{k=0} x(k) z^{-k}$$ where the complex variable \(z\) is selected to ensure that the summation converges.
+</li>
+<li>Look at the <a href="http://www.mathworks.com/help/symbolic/compute-z-transforms-and-inverse-z-transforms.html">rabbit problem</a> for an example to include
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-4-1-2" class="outline-4">
+<h4 id="sec-4-1-2"><a id="ID-C591CE6F-47B8-4449-8CC4-D35B6D0213CA" name="ID-C591CE6F-47B8-4449-8CC4-D35B6D0213CA"></a><span class="section-number-4">4.1.2</span> <span class="todo TODO">TODO</span> Tom's PV Notes&#xa0;&#xa0;&#xa0;<span class="tag"><span class="NOTES">NOTES</span></span></h4>
+<div class="outline-text-4" id="text-4-1-2">
+<p>
+Left of on page 24. He is finally getting to PV stuff with z-transform.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-4-2" class="outline-3">
+<h3 id="sec-4-2"><a id="ID-5A16242D-26A1-455D-A976-ACBAF4DDD83D" name="ID-5A16242D-26A1-455D-A976-ACBAF4DDD83D"></a><span class="section-number-3">4.2</span> <span class="todo TODO">TODO</span> Teaching module&#xa0;&#xa0;&#xa0;<span class="tag"><span class="CHASE">CHASE</span>&#xa0;<span class="PYTHON">PYTHON</span></span></h3>
+<div class="outline-text-3" id="text-4-2">
+
+<p>
+Quote from Tom's email:
+</p>
+
+<blockquote>
+<p>
+Dear Chase and Spencer,
+</p>
+
+<p>
+I am attaching a document on Z-transforms.
+</p>
+
+<p>
+I want you to read this quickly, then get to work to make a two-part python demo (with a description in a *.rst file for me) that "teaches" the basics of z-transforms (without proofs &#x2013; just properties of z-transforms).  I want you to prepare a module that teaches how to use them to:
+</p>
+
+<p>
+a) compute present values, and
+</p>
+
+<p>
+b) solve linear difference equations.
+</p>
+
+<p>
+The scipy.signal facility has much of what you need.  Start with page 455 of the scipy manual please.
+</p>
+
+<p>
+Once you get familiar with z-transforms I'll ask you to do some things such as to get partial fractions decompositions and also to compute residues of some functions that I'll tell you about later.
+</p>
+
+<p>
+As for the elementary material on present values, if you go to my web page, the teaching section, you'll find some handwritten notes for an undergraduate macro class. One of the first lectures talks about using z-transforms to compute present values of discrete time sequences.
+</p>
+
+<p>
+(Later we might use Laplace transforms &#x2013; also in scipy &#x2013; to compute present values of continuous time functions).
+</p>
+
+<p>
+I realize that  my instructions are a little vague, but feel free to be creative.
+</p>
+
+<p>
+Very soon, I'll send you a request for another python project that is much more tightly specified.
+</p>
+
+<p>
+How is your reading going?
+</p>
+
+<p>
+Tom make a two-part python demo (with a description in a *.rst file for me) that "teaches" the basics of z-transforms (without proofs &#x2013; just properties of z-transforms).  I want you to prepare a module that teaches how to use them to:
+</p>
+
+<p>
+a) compute present values, and
+b) solve linear difference equations.
+</p>
+
+<p>
+The scipy.signal facility has much of what you need.  Start with page 455 of the scipy manual please.
+</p>
+</blockquote>
+
+<p>
+More information on present value calculations can be found in Tom's <a href="file:///Users/sglyon/Downloads/TSUndergradMacroNotes.pdf">notes</a> from an undergraduate macro course he taught.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5"><a id="ID-0245B38D-36D2-4218-8DC2-36334FF6EF7C" name="ID-0245B38D-36D2-4218-8DC2-36334FF6EF7C"></a><span class="section-number-2">5</span> <span class="todo TODO">TODO</span> Dynare -&gt; python = dolo <code>[0/2]</code>&#xa0;&#xa0;&#xa0;<span class="tag"><span class="TOM">TOM</span></span></h2>
+<div class="outline-text-2" id="text-5">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption align="above"><span class="table-number">Table 3:</span> Clock summary at <span class="timestamp-wrapper"><span class="timestamp">[2013-07-11 Thu 10:18]</span></span></caption>
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Headline</th>
+<th scope="col" class="left">Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left"><b>Total time</b></td>
+<td class="left"><b>0:03</b></td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">TODO Dynare -&gt; python = dolo [0/2]</td>
+<td class="left">0:03</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">[2013-07-11 Thu 10:09]</span></span>
+<a href="file:///Users/sglyon/School/NYU/NYUclasses/Sargent/sargent.html">z-transform  {0/2}</a>
+</p>
+</div>
+<div id="outline-container-sec-5-1" class="outline-3">
+<h3 id="sec-5-1"><a id="ID-EED6D755-89E1-4048-8EB8-7D16A4A59F4A" name="ID-EED6D755-89E1-4048-8EB8-7D16A4A59F4A"></a><span class="section-number-3">5.1</span> <span class="todo TODO">TODO</span> Read RMT4 chapter 11</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+Tom asked us to read RMT4 <a href="file:///Users/sglyon/School/NYU/NYUclasses/Sargent/Summer2013/Refs/RMT4_ch11.pdf">chapter 11</a> of RMT4 and pay special attention to how to do Matlab examples in python
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-5-2" class="outline-3">
+<h3 id="sec-5-2"><a id="ID-C3DB9A5A-70CD-40B3-B40F-676D87665811" name="ID-C3DB9A5A-70CD-40B3-B40F-676D87665811"></a><span class="section-number-3">5.2</span> <span class="todo TODO">TODO</span> Matlab+Dynare -&gt; python+dolo&#xa0;&#xa0;&#xa0;<span class="tag"><span class="PYTHON">PYTHON</span>&#xa0;<span class="CHASE">CHASE</span></span></h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+Just do some dolo-fu on this and call it good
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-6" class="outline-2">
+<h2 id="sec-6"><a id="ID-B63EE52B-DFDC-4838-B5ED-4404907FDD95" name="ID-B63EE52B-DFDC-4838-B5ED-4404907FDD95"></a><span class="section-number-2">6</span> <span class="todo TODO">TODO</span> Marching orders, number 2&#xa0;&#xa0;&#xa0;<span class="tag"><span class="TOM">TOM</span></span></h2>
+<div class="outline-text-2" id="text-6">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption align="above"><span class="table-number">Table 4:</span> Clock summary at <span class="timestamp-wrapper"><span class="timestamp">[2013-07-18 Thu 00:35]</span></span></caption>
+
+<colgroup>
+<col  class="left" />
+
+<col  class="right" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Headline</th>
+<th scope="col" class="right">Time</th>
+<th scope="col" class="left">&#xa0;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left"><b>Total time</b></td>
+<td class="right"><b>0:37</b></td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">TODO Marching orders, number 2</td>
+<td class="right">0:37</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">\__ TODO Work problems RMT4 2.6, 2.10&#x2026;.</td>
+<td class="right">&#xa0;</td>
+<td class="left">0:35</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">[2013-07-17 Wed 14:06]</span></span>
+<a href="file:///Users/sglyon/Dropbox/org/xdress.html">Enum support in xdress</a>
+</p>
+</div>
+<div id="outline-container-sec-6-1" class="outline-3">
+<h3 id="sec-6-1"><a id="ID-D7454813-A217-42CD-A074-1599BF68C827" name="ID-D7454813-A217-42CD-A074-1599BF68C827"></a><span class="section-number-3">6.1</span> <span class="todo TODO">TODO</span> Read <a href="file:///Users/sglyon/School/NYU/NYUclasses/Sargent/Summer2013/Refs/RMT4_ch11.pdf">RMT4 Chapter 11</a>&#xa0;&#xa0;&#xa0;<span class="tag"><span class="READING">READING</span></span></h3>
+<div class="outline-text-3" id="text-6-1">
+</div>
+</div>
+
+<div id="outline-container-sec-6-2" class="outline-3">
+<h3 id="sec-6-2"><a id="ID-CD33EBD9-6E07-4890-9537-B7C1A314C826" name="ID-CD33EBD9-6E07-4890-9537-B7C1A314C826"></a><span class="section-number-3">6.2</span> <span class="todo TODO">TODO</span> Work problems RMT4 2.6, 2.10. 2.14, 2.17, 2.20, 2.24&#xa0;&#xa0;&#xa0;<span class="tag"><span class="HW">HW</span></span></h3>
+<div class="outline-text-3" id="text-6-2">
+</div>
+</div>
+
+<div id="outline-container-sec-6-3" class="outline-3">
+<h3 id="sec-6-3"><a id="ID-45296A34-EA73-47F2-82C2-396F988ABCB7" name="ID-45296A34-EA73-47F2-82C2-396F988ABCB7"></a><span class="section-number-3">6.3</span> <span class="todo TODO">TODO</span> Replicate figure 11.9.1 in RMT4 (page 401)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="PYTHON">PYTHON</span></span></h3>
+<div class="outline-text-3" id="text-6-3">
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Spencer Lyon</p>
+<p class="date">Created: 2013-07-21 Sun 16:22</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.3.1 (<a href="http://orgmode.org">Org</a> mode 8.0.5)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,747 @@
+#+STARTUP: overview
+#+STARTUP: hidestars
+#+STARTUP: indent
+#+TAGS: CHASE (c) TOM(t) PYTHON(p) QUESTION(q) MATLAB(m) INC(i) RMT4(r) NOTES(n)
+#+OPTIONS: H:4
+
+* Rtm4
+:PROPERTIES:
+:ID:       C5EF6281-CA55-40A9-A689-6E9A060412DC
+:END:
+** COMMENT Chapter 2
+*** COMMENT Markov Chains
+**** Definitions
+
+- The *Markov Property* is that the conditional probability
+  $P(x_t|x_{t-1},x_{t-2}, \dots) = P(x_t|x_{t-1})$
+- A matrix is *stochastic* if two things hold: 1. $P_{ij} >= 0 \forall
+  i, j$ and 2. $\sum_j P_{ij}=1 \forall i$
+- A *Markov Chain* is made up of 3 things: 1. the standard basis
+  vectors $e_i$, 2. transition matrix $P$, where $P_{ij}$ that defines
+  the probability of moving from state $i$ to state $j$.
+- The probability of moving from state $i$ to state $j$ in $k$ periods
+  is $P^{(k)}_{ij}$. Note that the parenthesis are there to
+  disambiguate what object the power $k$ is operating on. I mean it to
+  say the $ij$ element of the matrix $P$ raised to the $k$ power, not
+  the $ij$ element of $P$ raised to the $k$ power.
+- An *unconditional probability* is a $(1 x n)$ vector where element
+  $i$ is the probability that $x_t = x_i$. It is indexed over time and
+  evolves by multiplying on the right by $P$. ($\pi_t = \pi_{t-1}P$)
+- A distribution is *stationary* if $\pi_{t+1}=\pi_t$, or in other
+  words $\pi' = \pi' P \rightarrow (I-P')\pi = 0$. This makes $\pi$ an
+  eigenvector of $P'$ corresponding to a unit eigenvalue. (Normally we
+  have $(I\lambda - P')$, but in this case $\lambda=1$). For all
+  stochastic matrices $P$, there exists at least one stationary
+  distribution. This distribution is unique iff there is only one unit
+  eigenvalue.
+- An *absorbing state* is a state in a stationary distribution that
+  has a probability of 1. This means there can only be one absorbing
+  state in every stationary distribution. An *absorbing subset* is a
+  subset of the entire state that takes up the entire
+  probability. Again, there can only be one absorbing subset, but this
+  subset can contain many items.
+- A process is *asymptotically stationary* if, in the limit as $t
+  \rightarrow \infty$ the unconditional distribution $\pi_t
+  \rightarrow \pi_{\infty}$. If this $\pi_{\infty}$ is the same
+  regardless of the starting value $\pi_0$, then the process is said
+  to be asymptotically stationary with a unique invariant
+  distribution.
+- The *law of iterated expectations* is illustrated in the fact that
+  when $y_{t+1} = \bar{y}' P' x_t + \bar{y}'v_{t+1}$ ($x$ is state,
+  $y$ is a function of the state, $P$ is transition matrix, $v$ is
+  random shock with $E[v] = 0$) we have that
+  $E[E[Y_{t+1}|x_{t+1}]|x_t] = E[y_{t+1}|x_t]$. More formally, this
+  law says that for any random variable $z$ and two information sets
+  $J$, $I$ with $j \subset I$, $E[E(z|I)]|J] = E(z|J)
+  - Example: $$
+    \begin{align}
+    E y_1 &= \sum_j \pi_{1, j} \bar{y}_j = \pi_1' \bar{y} - (\pi_0'P)\bar{y} = \pi_0' (P \bar{y}) \\
+    E[E(y_1|x_0 = e_i)] &= \sum_i \pi_{0, i} \sum_j P_{ij}\bar{y}_j = \sum_j \left(\pi_{0, i} P_{ij} \right)\bar{y}_j = \pi_1' \bar{y} = E y_1
+    \end{align}
+    $$
+- A random variable is said to be *invariant* if it $y_t = y_0, t \ge
+  0$, for all realizations of $x_t, t \ge 0$ that occur with positive
+  probability under $(P, \pi)$. In other words, the random variable
+  $y_t$ remains constant at $y_0$, even while the underlying state
+  $x_t$ moves through the state space $X$.
+- Any stochastic process $y_t$ that follows the rule $E[y_{t+1}|x_t] =
+  y_t$ is said to be a *martingale*.
+- A stationary Markov chain is said to be *ergodic* if the only
+  invariant functions $\bar{y}$ are constant with probability 1 under
+  the stationary unconditional probability distribution $\pi$,
+  i.e. $\bar{y}_i = \bar{y}_j \forall i, j$ with $\pi_i >0$ and $\pi_j
+  >0$. Another definition I keep seeing online is that a Markov chain
+  is ergodib or irreducible if it is possible to eventually get from
+  every state to every other state with positive probability.
+- The *likelihood* for a stochastic matrix following the Markov
+  property can be written as follows $$L = \pi_{0, i_0} \prod_i
+  \prod_j P_{i, j}^{n_{ij}}$$ where $n_{ij}$ is the number of times a
+  one period transition from state $i$ to state $j$ occurs. This
+  function is classified as a /multinomial/ distribution.
+
+**** Algorithms and Applications
+
+***** Finding P from one step ahead conditional expectations
+     If the transition matrix $P$ is unknown, but you can determine
+     conditional expectations of $n$ independent functions (i.e., $n$
+     linearly independent vectors $h_1, \dots, h_n$), you will have
+     uniquely identified $P$.
+
+***** Eigenvalues and left/right eigenvectors of stochastic matrices
+     The unit eigenvalues of $P$ have left-eigenvectors that are the
+     stationary distributions of the chain [ $(I - P')\pi = 0$ ] and
+     right eigenvectors that are invariant functions of the chain [
+     $(P-I) \bar{y} = 0$ ]
+
+     The left eigenvectors of a matrix $A$ are found by solving $(I -
+     A') x = 0$ for $x$. They are the exact same as the right
+     eigenvectors of $A'$ (right eigenvectors are what I have been
+     finding my whole life)
+
+***** Finding stationary distributions
+     To find the stationary distributions of a Markov chain $P$,
+     simply find the left-eigenvectors (right eigenvectors of $P'$)
+     and normalize so that is sums to 1 (find it in terms of simple
+     whole numbers and divide the vector by its sum). To find the
+     invariant functions just find the right eigenvectors of $P$ and
+     then you can multiply out front by any scalar because they don't
+     have to be normalized to 1.
+
+***** Markov chain parameter estimation
+     Estimation for free parameters $\theta$ of a Markov process: Let
+     the transition matrix $P$ and the initial distribution $\pi_0$ be
+     functions $P(\theta), \pi_0(\theta)$ of a vector of free
+     parameters $\theta$. Given a sample $\{x_t\}_{t=0}^T$, regard the
+     likelihood function as a function of the parameters $\theta$. As
+     the estimator of $\theta$, choose the value that maximizes the
+     likelihood function $L$ (just a very verbose way of saying to
+     MLE).
+
+**** Theorems
+
+- Let $\bar{y}$ define a random variable as a function of an
+  underlying state $x$, where $x$ is governed by a stationary Markov
+  chian ($P, \pi$). Then $$ \frac{1}{T} \sum_{t=1}^T y_t \rightarrow
+  E[y_{\infty} |x_0]$$ with probability 1.
+
+- Let $(P, \pi)$ be a stationary Markov chain. If $$E[y_{t+1}|X+t] =
+  y_t$$ then the random variable $y_t = \bar{y}' x_t$ is invariant.
+
+- Let $\bar{y}$ define a random variable on a stationary and ergodic
+  Markov chain $(P, \pi)$. Then $$ \frac{1}{T} \sum_{t=1}^T y_t
+  \rightarrow E[y_0]$$ with probability 1. In other words, the time
+  series average converges t the population mean of the stationary
+  distribution.
+
+*** COMMENT Continuous-state Markov chain
+**** Definitions
+- *State transitions* are defined the by the cumulative distribution
+  function (cdf) $$\Pi(s'|s) = \text{Prob}(s_{t+1} \ge s'|s_t=s)$$ The
+  initial state $s_0$ is given by the cdf $$\Pi_0(s) = \text{Prob}(s_0
+  \le s)$$
+- The *transition density* is $$\pi(s'|s) = \frac{\partial}{\partial
+  s'} \Pi(s'|s)$$ and the initial density is $$\pi_0(s) =
+  \frac{\partial}{\partial s} \Pi_0(s) $$
+- A *history* is given the notation $s^t = [s_t, s_{t-1}, \dots, s_0]$
+  and is just a vector of the value of a variable over time.
+- A Markov chain is *stationary* if $\pi_0$ satisfies ($\forall s \in
+  S$) $$\pi_0(s') = \int_s \pi(s'|s) \pi_0(s) ds$$
+- A function $\phi$ of a Markov chain is invariant if $$ \int \phi(s')
+  \pi(s'|s)ds' = \phi(s)$$
+
+**** Theorems
+
+- Let $y(s)$ be a random variable, a measurable function of $s$, and
+  let ($\pi(s'|s), \pi_0(s)$) be a stationary and ergodic
+  continuous-state Markov process. Assume that $E|y| < +\infty$. Then
+  $$ \frac{1}{T} \sum_{t=1}^T y_t = Ey = \int y(s) \pi_0(s) ds$$ with
+  probability 1 with respect to the distribution $\pi_0$.
+
+*** COMMENT Stochastic linear difference equations
+**** Definitions
+
+- A *martingale difference sequence adapted to J_t* is a sequence
+  $z_{t+1}$ that satisfies the equation $E[z_{t+1}|J_t] = z_t$
+- The *first order stochastic linear difference equation* is of the
+  following form $x_{t+1} = A_0 x_t + C w_{t+1}$. $w_{t+1}$ must
+  satisfy one of 3 assumptions (in order of decreasing
+  strictness. Note that if a higher one is satisfied, all lower ones
+  are too. i.e. if A1 then A2 and A3, if A2 then A3):
+  - Distributed i.i.d $N \sim (0, I)$
+  - $Ew_{t+1}|J_t = 0$ and $Ew_{t+1}w_{t+1}'|J_t = I$, where $J_t$ is
+    all the information at time $t$ and the $E[\cdot |J_t]$ denotes a
+    conditional expectation.
+  - $E w_{t+1} = 0$ and $Ew_{t+1}w_{t-j}' = I$ when $j=0$ and
+    $Ew_{t+1}w_{t-j}' = 0$ when $j \ne 0$ (this is white noise)
+- A *stochastic process* is a sequence of random vectors
+- A stochastic process $\{x_t\}$ is said to be *covariance stationary*
+  if it satisfies the following two properties: (a) the mean is
+  independent of time ($Ex_t = E x_0 \forall t$) and (b) the sequence
+  of autocovariance matrices $E(x_{t+j} - Ex_{t+j})(x_t - E x_t)'$
+  depends on the separation between dates $j$, but not on $t$.
+- A square real valued matrix $A_0$ is said to be stable if all of its
+  eigenvalues in modulus are strictly less than unity.
+
+**** Algorithms and Applications
+
+***** Linear Stochastic Difference equation form
+
+To put a stochastic process in the form of a first order linear
+stochastic difference equation, come up with matrices $A_0$, $C$ and
+(optionally) $G$ that satisfy $$x_{t+1} = A_0 x_t + C w_{t+1}$$ $$ y_t
+= G x_t$$
+
+***** Covariance stationary stochastic processes
+
+ Whether or not a stochastic process is covariance stationary often
+ depends on the form in which the process is presented and some
+ initial conditions. We will be working with the form:
+ $\left[\begin{smallmatrix} x_{1, t+1} \\ x_{2, t+1}
+ \end{smallmatrix}\right] = \left[\begin{smallmatrix} 1 & 0 \\ 0 &
+ \tilde{A} \end{smallmatrix}\right] \left[\begin{smallmatrix} x_{1, t}
+ \\ x_{2t} \end{smallmatrix}\right] + \left[\begin{smallmatrix} 0
+ \\ \tilde{C} \end{smallmatrix}\right] w_{t+1}$. In this form we
+ assume that $\tilde{A}$ is a stable matrix (so that 1 cannot be an
+ eigenvalue of $\tilde{A}$)
+
+To find the covariance stationary initial conditions for the mean and
+covariance of a stochastic process, you must follow these steps:
+
+1. Set your system up in the form described above.
+2. Solve for the stationary mean by taking expected values of both
+   sides of the stochastic linear difference equation and ending up
+   with this equation: $(I - A_i) \mu = 0$. You then need to solve for
+   the eigenvector that corresponds to the single unit eigenvalue of
+   $A_0$. This vector is the stationary mean vector, or $\mu$.
+3. Solve for the stationary variance by solving the matrix quadratic:
+   $C_x(0) = A_0 C_x(0)A_0' + CC'$. The autocovariance process through
+   time can be found via the relation: $C_x(j) = A_0^j C_x(0)$
+
+***** To solve for impulse response functions,
+
+Re-write the stochastic linear difference equation using the lag
+operator $Lx_{t+1} = x_t$ to get $(I - A_o L)x_{t+1} = C
+w_{t+1}$. Iterating forward from time $t=0$ leads to the following
+expressions for $x_t$ and $y_t$: $$x_t = A_0^t x_0 + \sum_{j=0}^{t-1}
+A_0^j C W_{j-t}$$ $$ y_t = G A_0^t x_0 + G \sum_{j=0}^{t-1} A_o^j C
+w_{t-j}$$ The impulse response function for $x$ is $h_j = A_0^j C$ and
+the impulse response function for $y$ is $\tilde{h}_j = G A_0^j C$
+
+***** Forecasting the conditional covariance matrix
+
+Using the impulse response functions from above we can forecast the
+expected $t$ period ahead conditional covariance matrix $E(y_t -
+EY_t|x_0)(y_t - Ey_t|x_0)' = G \left[\sum_{h=0}^{t-1} A_0^h C C'
+{A_0^h}'\right] G'$
+
+***** How to apply the Howard improvement algorithm to the evaluation of dynamic criterion.
+
+We will be working with the following equations: $$x_{t+1} = A x_t + B
+u_t + C w_{t+1}$$ $$u_t = - F_0 x_t$$ $$v(x_0) = - E_0
+\sum_{t=0}^{\infty} \beta^t \left[x_t'Rx_t + u_t'Qu_t \right]$$
+
+1. Start with some given policy rule $F_0$ and use it to find $P_0 =
+   R + F_0'QF_0 + \beta(A - B F_0)'P_0(A - BF_0)$
+2. Use this $P_0$ to find a $F_1 = \beta(Q + \beta B'P_0B)^{-1}B'P_0A$
+3. Repeat this sequence using the expressions $P_j = R + F_j' Q F_j +
+   \beta(A - B F_j)'P_j(A - BF_j)$ and $F_{j+1} = \beta(Q + \beta B'
+   P_j B)^{-1}B'P_j
+*** COMMENT Population
+**** Algorithms and Applications
+***** Parameter estimation
+      This is simple least squares. If $Y$ is governed by a
+      state-space system and somehow $X$ comes from $Y$. you can do
+      least squares on them to get a vector $\beta$ that minimizes the
+      sum of squared errors for the regression. We get that $$\beta =
+      (EYX')[E(XX')]^{-1}$$
+***** Multiple Regressors
+      If instead of being a scalar $Y$ is a vector of random
+      variables, then you will do multiple regressions. In this case
+      $\beta$ becomes a matrix and the error term is a vector. The
+      equation for beta is found in the same way.
+*** COMMENT Estimation of Model Parameters
+**** Algorithms and Applications
+***** Likelihood function
+      The Likelihood function is defined as the joint probability
+      distribution of all the state variables $f(x_t, x_{t-1}, \dots
+      x_0)$. This distribution can be factored by multiplying
+      successive conditional joint probability distributions $$f(x_t,
+      x_{t-1}, \dots, x_0) = f(x_t |x_{t-1}, \dots, x_0)
+      f(x_{t-1}|x_{t-2}, \dots, x_0) \dots f(x_1|x_0)f(x_0)$$ Note
+      that for a Markov system the equation becomes $f(x_t|x_{t-1},
+      \dots, x_0) = f(x_t|x_{t-1})$ because of the Markov
+      property. This means that the likelihood function becomes
+      $$f(x_t, x_{t-1}, \dots, x_0) = f(x_t |x_{t-1})
+      f(x_{t-1}|x_{t-2})\dots f(x_1|x_0)f(x_0)$$
+***** Special log-likelihood function
+      If the $w$'s underlying the stochastic process for $Y$ are
+      Gaussian, then we know what the conditional distribution
+      $f(x_{t+1}|x_t)$ is Gaussian with mean $A_0x_t$ and covariance
+      matrix $CC'$. Taking the log of the conditional density of the
+      $n$ dimensional vector $x_t$ becomes $$\log f(x_{t+1}|x_t) =
+      -0.5n \log(2 \pi) - 0.5 \log \text{det}(CC') - 0.5(x_{t+1} -
+      A_0x_t)'(CC')^{-1}(x_{t+1} - A_0x_t)$$
+*** COMMENT The Kalman filter
+**** Definitions
+- The *Ricatti Difference Equation* is part of the Kalman filter and is expressed as $$\Sigma_{t+1} = C C' + K_t R K_t' + (A_0 K_t G) \Sigma_t (A_0 - K_t G)'$$
+- The *innovation process* is the term  $a_t = y_t = G \hat{x}_t$ in the Kalman filter. It is the part of $y_t$ that cannot be predicted from past values of $y$.
+- Sometimes the Kalman filter is called the *whitening filter* that takes a process $\{y_t\}$ of signals as an input and produces a process $\{a_t\}$ of innovations as an output.
+**** Algorithms and Applications
+***** The Actual Filter
+The actual meat of the Kalman filter is made up of a recursive system of 4 equations:
+
+\begin{align}
+a_t &= y_t = G \hat{x}_t \\
+K_t &= A_a \Sigma_t G'(G\sigma_T G' + R)^{-1} \\
+\hat{x}_{t+1} &= A_0 \hat{x}_t + K_t a_t \\
+\Sigma_{t+1} &= C C' + K_t R K_t' + (A_0 K_t G) \Sigma_t (A_0 - K_t G)'
+\end{align}
+
+This system defines the underlying processes for the unobserved state $x_t$ by giving the distribution $x_{T+1} | y_t \sim N(\hat{x}_{t+1}, \Sigma_{t+1})$.
+**** Other                                                      :QUESTION:
+- How to get equation 2.7.5
+*** COMMENT Applications of the Kalman Filter
+**** Definitions
+- The *precision* of an estimate is often found by taking the reciprocal of the estimated variance.
+**** Applications and Algorithms
+***** Cagan and Friedman "adaptive expectations"
+These two guys, in 1956, posited that when people wanted to form expectations about future values of a scalar $y_t$, they would use the following adaptive expectations scheme: $$y_{t+1}^{\star} = (1 -K) y_{t}^{\star} + K y_t$$
+***** Muth's reverse engineering                                    :INC:
+In 1960 Muth decided he wanted to know under what stochastic processes the Cagan and Friedman adaptive expectation rule would be optimal. He decided to do it backwards and start with the forecasting scheme and then he would back out the underlying optimal stochastic processes for that scheme. We use the Kalman filter to do the same thing.
+
+The model we use is
+
+\begin{align}
+x_{t+1} &= x_t + w_{t+1} \\
+y_t &= x_t + v_t
+\end{align}
+
+where $y_t$, $x_t$ are scalar random processes, and $w_{t+1}$ ,$v_t$ are mutually4independent i.i.d. Gaussian random processes with means of zero and variances $Ew^2_{t+1} = Q$, $Ev_t^2 = R$, and $Ev_sw_{t+1} = 0  \forall t, s$.
+
+In this problem $A = 1$ $CC' = Q$, and $G = 1$.
+
+SEE THE BOOK FOR MORE; it is too much to type, but it is straightforward.
+*** COMMENT Vector autoregressions and the Kalman filter
+**** Definitions                                                  :MATLAB:
+- A *time-invariant* matrix $\Sigma_t = \Sigma$ that solves the Ricatti equation is the covariance of $x_t$ around $Ex_t|\{y_{-\infty}^{t-1}\}$, where $\{y_{-\infty}^{t-1}\}$ denotes the semi-infinite history of $y_s$ for add dates on or before $t-1$. (Matlab program ~kfilter.m~)
+**** Algorithms and Applications
+***** Interpreting VARs
+Most economic models are in the form of the state space system:
+
+\begin{align}
+x_{t+1} &= A_0 x_t + C w_{t+1} \\
+y_t = G x_t + v_t
+\end{align}
+
+This hidden Markov model disturbs the evolution of the state $x_t$ by the $p x 1$ shock vector $w_{t+1}$ and it them perturbs the $m x 1$ vector of observed variables by the $m x 1$ vector of measurement errors $v_t$. Therefore, $p+m$ shocks affect $y_t$. Good economic theory gives explanation for these shocks.
+
+Time invariant version of the state space system comes from the Kalman filter and is:
+
+\begin{align}
+\hat{x}_{t+1} &= Z_0 \hat{x}_t + K a_t \\
+y_t &= G \hat{x}_t a_t
+\end{align}
+
+This representation represents the exact same process $y_t$ in terms of an $m x 1$ vector of shocks a_t that are recovered by running an infinite-order (population) VAR for $y_t$. The Kalman filter provides a mapping between the two representations and is therefore a very useful tool for interpreting VARs.
+
+*** COMMENT More Estimation
+**** Definitions
+- The *likelihood function* for the variable $y_t$ we have been working with is $$F(y_T, \dots, y_0) = f(y_t|Y^{T-1})f(y_{t-1}|y^{T-2}) \cdots f(y_1|y_0) f(y_0)$$
+- The *log of the conditional density function* of the $m x 1$ vector $y_t$ is $$\log f(y_t|Y^{t-1}) = -0.5m \log(2 \pi) - 0.5 \log \text{det} (\Omega_t) - 0.5 a_t' \Omega_t^{-1} a_t$$
+**** Algorithms and Applications
+***** Bayesian posterior
+The likelihood function and the log of the conditional density function can be used in conjunction with the Kalman filter recursion to estimate parameters $\theta$ underlying the matrices $A_0, G, C, R$.
+
+The only other piece of the puzzle that is un-accounted for is the representation of Bayes' law in terms of our parameter vector $\theta$, our data $y_0^T$, and the prior distribution for $\theta$ $\tilde{p}(\theta)$. That appears below in the form of the posterior distribution for $\theta$: $$ \tilde{p}(\theta|y_0^T) = \frac{f(y_0^T | \theta) \tilde{p}(\theta)}{\int f(y_0^T | \theta) \tilde{p}(\theta) d \theta}$$
+
+The denominator in the equation above is the marginal joint density ($f(t_O^T)$) of $y_0^T$.
+*** COMMENT The spectrum
+**** Definitions
+- The *spectral density matrix* (commonly represented as $S_x(\omega)$) is a special complex-valued matrix which can contain all the second moments for a covariance stationary stochastic process. It and the auto-covariance matrix can be used to determine the other if one is unknown.
+**** Applications and Algorithms
+***** Fourier inversion                                         :PHYSICS:
+It is interesting to note that the auto-covariance matrix and the spectral density matrix are simply the Fourier and inverse Fourier transform of one another. That being said, here are some expressions for $C_x(\tau)$ and $S_x(\omega)$
+
+
+\begin{align}
+C_x(\tau) &= \frac{1}{2 \pi} \int_{-\pi}^{\pi} S_x(\omega) e^{+ i \omega \tau} d \omega \\
+S_x(\omega) &= \sum_{\tau= - \infty}^{\infty} C_x(\tau) e ^{- i \omega \tau}
+\end{align}
+
+Obviously, we could use the expressions above to determine $C_x(0)$ and $S_x(0)$ by setting $\tau$ and $\omega$ equal to zero in the right places and watching the exponentials drop out.
+
+Note that although one is a sum and one is an intergral, these are still the Fourier and inverse Fourier transform of one anohter. The reason is that we only have $C_x(\tau)$ for discrete values of $\tau$, so we need a summation of them to get $S_x(\omega)$, which is defined continuously across all $\omega$.
+***** Example                                                    :MATLAB:
+As an example, Matlab the program =bigshow2.m= computes the impulse response, spectrum, covariogram, and sample path of 4 different processes. I could move it to python, but why?
+*** COMMENT The Linear Quadratic (LQ) permanent income model
+**** Definitions
+**** Algorithms and Applications
+***** DONE review how they derived equation 2.12.7
+CLOSED: [2013-07-11 Thu 19:50]
+:PROPERTIES:
+:ID:       6F8503D3-90CA-4E6E-9162-D2AEAAB2FF33
+:END:
+**** Theorems
+**** Other Notes
+** COMMENT Technical Appendix A: Functional Analysis
+*** Definitions
+- A sequence $\{x-n\}$ in a metric space $(X, d)$ is said to *converge* to a limit $x_0 \in X$ if for every $\varepsilon > 0$ there exists an $N(\varepsilon)$ such that $d(x_n, x_0) < \varepsilon$ for $n \ge N(\varepsilon)?
+  - What is this $N$ thing?
+- A metric space $(X, d)$ is said to be *complete* if each Cauchy sequence in $(X, d)$ is a convergent sequence in $(X, d)$. That is in a complete metric space each Cauchy sequence converges to a point belonging to the metric space.
+- An *operator* is a function $f$ mapping a metric space $(X, d)$ into itself.
+- A *contraction* is a function that has the property that for some real number $0\le k < 1$ and a metric space ($X, d$) $d[f(x), f(y)] \le k d(x, y) \forall x, y, \in X$.
+*** Theorems
+**** Cauchy sequence in metric space
+Let $\{x_n\}$ be a convergent sequence in a metric space ($X, d$). Then $\{x_n\}$ is a Cauchy sequence.
+**** Contraction mapping theorem
+Let $(X, d)$ be ac omplete metrix space and let $f: X \rightarrow X$ be a contraction. Then there is a unique point  $x_0 in X$ such that $f(x_0) = x_0$. Furthermore, if $x$ is any point in $X$ and $\{x_n\}$ is defined inductively according to $x_1= f(x), x_2 = f(x_1) \dots$, then $\{x_n\}$ converges to $x_0$
+**** Blackwell's Sufficient Conditions for T to be a contraction
+Let $T$ be an operator on a mertic space $(X, d_{\infty}$, where #X# is a space of functions. Assume that $T$ has the following two properities
+
+1. Monotonicity: for and #x, y \in X, x \ge y$ implies that $T(x) \ge T(y)$
+2. Discounting: Let $c$ denote a function that is constant at the real value $c$ for all points in the domain of definition of the function in X$. For any positive real $c$ and ever $x \in X, T(x+c) \le T(c) + \beta c$ for some $\beta$ satisfying 0 \le \beta < 1. Then $T$ is
+*** Algorithms and Applications
+**** Policy improvement algorithm
+We want to study the discoutned dynamic programming problem:
+
+\begin{align}
+v(x) = \max_{u \in R^k} \{r(x, u) + \beta v(x')\}, \quad x' \le g(x, u), \quad 0 < \beta < 0
+\end{align}
+
+The operator $T$ is defined as follows: $$ Tv = \max_{u \in R^k} \{ r(x, u) + \beta v(x')\}, \quad x' \le g(x, u), \quad x \in X$$
+
+We will work with the complete metric space $(X, d_{\infty})$ where  $X$ is the space of continuous bounded functions mapping $X$ to the real line and $d_{\infty}(v, w) = \sup_{x\in X}|v(x) - w(x)|$.
+
+In the chosen metric space, it is easy to show that $T$ is a contraction by verifying Blackwell's sufficient conditions.
+
+The operator $T_{\mu}$ is defined as follows (note for simplicity we allow the constraint to hold with equality. i.e. we say that $x' = g(x,  u)$):
+
+\begin{align}
+T_{\mu}(v) &= T(v) \\
+t_{\mu}(v) &= f[x, \mu(x)] + \beta v\{g[x, \mu(x)]\}
+\end{align}
+
+where $\mu(x)$ is the policy function that attains $T(v)(x)$. It is also easy to verify Blackwell's conditions for $T_{\mu}$
+
+The Howard improvement algorithm is defined as follows:
+
+Let $v_{\mu}(x) = T_{\mu}[v_{\mu}(x)]. Define a new policy $\bar{\mu}$ and an associated operator $T_{\bar{\mu}}$ by
+
+$$T_{\bar{\mu}}[v_{\mu}(x)] = T[v_{\mu}(x)]$$
+
+This means that $\bar{\mu}$ is the policy that solves a one-period problem with $v_{\mu}(x)$ as the terminal value function. Compute the fixed point
+
+$$V_{\bar{\mu}} = T_{\bar{\mu}}[v_{\bar{\mu}}(x)]$$
+
+Then $v_{\bar{\mu}}(x) \ge v_{\mu}(x)$. If $\mu(x)$ is not optimal, then $v_{\bar{\mu}} > v_\mu(x)$ for at least one $x \in X$.
+** COMMENT Technical Appendix: Linear Projections and Hidden Markov Models
+*** Definitions
+- A *linear projection of $Y$ on $X$* is the estimator of $Y$ that is a linear function of $X$ that minimized the mean sum of squared errors between each component in $Y$ and its estimate. (least squares)
+- A *hidden Markov model* is a model that has un-observable state variables, but has observable variables that are a function of the hidden state. They can be represented in the form of the canonical linear state-space system.
+** Chapter 11: Fiscal Policies in a Growth Model
+*** Non-stochastic model
+General Items:
+
+- No uncertainty (non-stochastic) and decision makers all have perfect foresight.
+**** Households and Technology
+
+There is a representative household that maximizes over non-negative streams of a single consumption good $c_t$ and leisure $1 - n_t$. The ordering is given by $$\sum_{t=0}^{\infty} \beta^t U(c_t, 1 - n_t), \quad \beta \in (0, 1)$$  where $U$ is strictly increasing in $c_t$ and $1 - n_t$, twice continuously differentiable and strictly concave. We require that $c_t \ge 0$ and that $n_t \in [0, 1]$. For now we will assume that $$U(c, t - n) = u(c) + u(1 - n).
+
+Technology is
+\begin{align}
+ g_t + c_t + x_t &\le F(k_t, n_t) \\
+k_{t+1} &= (1 - \delta) k_t + x_t
+\end{align}
+Where $\delta \in (0, 1)$ is a depreciation rate, $K_t$ is the stock of physical capital, $x_t$ is gross investment and $F(k, n)$ is a linearly homogeneous production function with positive and decreasing marginal products of capital and labor. This can be simplified to a single by substituting out the $x_4: $$g_t + c_t + k_{t+1} \le F(k_t, n_t)  + (1 - \delta) k_t$$
+**** Equilibrium
+The household owns capital, makes investment decisions, and rents capital and labor to the firm. There is a price system that is a triple of sequences: $\{ q_t, \eta_t, w_t \} _{t=0}^{\infty}$ where $q_t$ is the time 0 pre-tax price of one unit of investment at time t ($x_t$ or $c_t$), $\eta_t$ is the pre-tax time at time $t$, that household receives from renting capital to the firm in period $t$, and @w_t@ is the pre-tax labor wage.
+
+In equilibrium the household faces the budget constraint
+
+$$\sum_{t=0}^{\infty} q_t \{(1 + \tau_{ct})c_t + [k_{t+1} - (1 - \delta)k_t]\} \le \sum_{t=0}^{\infty} q_t \{ \eta_t k_t - \tau_{kt}(\eta_t  - \delta_t)k_t + (1 - \tau_{nt})w_t n_t - \tau_{ht}\}$$
+
+The government has a budget constraint $$\sum_{t=0}^{\infty} q_t g_t \le \sum_{t=0}^{\infty} q_t \{ \tau_{ct}c_T + \tau_{kt}(\eta_t - \delta) k_t + \tau_{nt} w_t n_t + \tau_{ht}\}$$
+**** Term structure of interest rates
+The prices system $\{q_t\}_{t=0}^{\infty}$ maximizes over non-negative streams of a single consumption good $c_t$ and leisure $1 - n_t$. The ordering is given by $$\sum_{t=0}^{\infty} \beta^t U(c_t, 1 - n_t), \quad \beta \in (0, 1)$$  where $U$ is strictly increasing in $c_t$ and $1 - n_t$, twice continuously differentiable and strictly concave. We require that $c_t \ge 0$ and that $n_t \in [0, 1]$. For now we will assume that $$U(c, t - n) = u(c) + u(1 - n).
+
+Technology is
+\begin{align}
+ g_t + c_t + x_t &\le F(k_t, n_t) \\
+k_{t+1} &= (1 - \delta) k_t + x_t
+\end{align}
+Where $\delta \in (0, 1)$ is a depreciation rate, $K_t$ is the stock of physical capital, $x_t$ is gross investment and $F(k, n)$ is a linearly homogeneous production function with positive and decreasing marginal products of capital and labor. This can be simplified to a single by substituting out the $x_4: $$g_t + c_t + k_{t+1} \le F(k_t, n_t)  + (1 - \delta) k_t$$
+**** Equilibrium
+The household owns capital, makes investment decisions, and rents capital and labor to the firm. There is a price system that is a triple of sequences: $\{ q_t, \eta_t, w_t \} _{t=0}^{\infty}$ where $q_t$ is the time 0 pre-tax price of one unit of investment at time t ($x_t$ or $c_t$), $\eta_t$ is the pre-tax time at time $t$, that household receives from renting capital to the firm in period $t$, and @w_t@ is the pre-tax labor wage.
+
+In equilibrium the household faces the budget constraint
+
+$$\sum_{t=0}^{\infty} q_t \{(1 + \tau_{ct})c_t + [k_{t+1} - (1 - \delta)k_t]\} \le \sum_{t=0}^{\infty} q_t \{ \eta_t k_t - \tau_{kt}(\eta_t  - \delta_t)k_t + (1 - \tau_{nt})w_t n_t - \tau_{ht}\}$$
+
+The government has a budget constraint $$\sum_{t=0}^{\infty} q_t g_t \le \sum_{t=0}^{\infty} q_t \{ \tau_{ct}c_T + \tau_{kt}(\eta_t - \delta) k_t + \tau_{nt} w_t n_t + \tau_{ht}\}$$
+*** Term structure of interest rates
+The prices system $\{q_t\}_{t=0}^{\infty}$ evidently embeds within it a term structure of interest rates. It is convenient to represent $q_t$ as
+
+\begin{align}
+q_t &= q_0 \frac{q_1}{1_0} \frac{q_2}{q_1} \cdots \frac{q_t}{q_{t-1}} \\
+&= q_0 m_{0, 1} m_{0, 2} \cdots m_{t-1, t}
+\end{align}
+
+where $m_{t, t+1} = \frac{q_{t+1}}{q_t}$. We can represent the one-period discount factor $m_{t, t+1}$ as $$m_{t, t+1} = R_{t, t+1}^{-1} = \frac{1}{1 + r_{t, t+1}} \approx \exp(-r_{t, t+1})$$
+
+THERE IS MUCH MORE IN THE BOOK, BUT I HAVE PRETTY MUCH BEEN WRITING EVERYTHING AND THAT IS DUMB
+* DONE [#A] Marching Orders, number 1 [4/4]
+CLOSED: [2013-07-13 Sat 12:48]
+# Clock in C-c C-x C-i
+# Clock out C-c C-x C-o
+# Re-evaluate time range (if manually changed) C-c C-y
+# Show times for each task C-c C-x C-d
+# Generate time report table C-c C-x C-r
+# Update clock table C-c C-x C-u
+
+#+BEGIN: clocktable :maxlevel 3 :scope subtree
+#+CAPTION: Clock summary at [2013-07-18 Thu 00:36]
+| Headline                                | Time      |       |
+|-----------------------------------------+-----------+-------|
+| *Total time*                            | *1d 6:46* |       |
+|-----------------------------------------+-----------+-------|
+| DONE [#A] Marching Orders, number 1...  | 1d 6:46   |       |
+| \__ DONE [#A] Read Chapter 2 of RMT4    |           | 17:42 |
+| \__ DONE [#B] Read the two techincal... |           |  1:13 |
+| \__ DONE [#A] Work exercises 2.1-2.5    |           | 11:51 |
+#+END:
+
+  DEADLINE: <2013-07-14 Sun>
+:PROPERTIES:
+:ID:       465B4AC3-AE20-4255-A252-CCABA15ECC0F
+:END:
+** DONE [#A] Read Chapter 2 of RMT4
+CLOSED: [2013-07-13 Sat 09:54]
+CLOCK: [2013-07-13 Sat 09:34]--[2013-07-13 Sat 09:54] =>  0:20
+CLOCK: [2013-07-11 Thu 12:42]--[2013-07-11 Thu 13:13] =>  0:31
+CLOCK: [2013-07-11 Thu 11:49]--[2013-07-11 Thu 12:31] =>  0:42
+CLOCK: [2013-07-10 Wed 11:08]--[2013-07-10 Wed 12:00] =>  0:52
+CLOCK: [2013-07-09 Tue 15:58]--[2013-07-09 Tue 16:00] =>  0:02
+CLOCK: [2013-07-09 Tue 14:44]--[2013-07-09 Tue 14:59] =>  0:15
+CLOCK: [2013-07-08 Mon 15:41]--[2013-07-08 Mon 16:24] =>  0:43
+CLOCK: [2013-07-08 Mon 12:15]--[2013-07-08 Mon 12:46] =>  0:31
+CLOCK: [2013-07-08 Mon 09:29]--[2013-07-08 Mon 10:34] =>  1:05
+CLOCK: [2013-07-08 Mon 08:35]--[2013-07-08 Mon 09:22] =>  0:47
+CLOCK: [2013-07-06 Sat 16:17]--[2013-07-06 Sat 16:30] =>  0:13
+CLOCK: [2013-07-06 Sat 15:37]--[2013-07-06 Sat 16:05] =>  0:28
+CLOCK: [2013-07-06 Sat 11:22]--[2013-07-06 Sat 12:11] =>  0:49
+CLOCK: [2013-07-06 Sat 10:06]--[2013-07-06 Sat 10:58] =>  0:52
+CLOCK: [2013-07-06 Sat 09:11]--[2013-07-06 Sat 09:48] =>  0:37
+CLOCK: [2013-07-05 Fri 22:40]--[2013-07-05 Fri 23:15] =>  0:35
+CLOCK: [2013-07-05 Fri 20:24]--[2013-07-05 Fri 20:44] =>  0:20
+CLOCK: [2013-07-03 Wed 14:54]--[2013-07-03 Wed 15:25] =>  0:31
+CLOCK: [2013-07-03 Wed 12:06]--[2013-07-03 Wed 12:25] =>  0:19
+CLOCK: [2013-07-02 Wed 23:05]--[2013-07-03 Wed 01:35] =>  2:30
+CLOCK: [2013-06-29 Sat 13:20]--[2013-06-29 Sat 18:00] =>  4:40
+:PROPERTIES:
+:ID:       760A6784-366A-4821-93C7-2CEAFB536B46
+:END:
+
+I should probably look over section 2.4.5.2 again. It was a bit
+complicated and I couldn't replicate its results on my own.
+
+** DONE [#B] Read the two techincal appendixes
+CLOSED: [2013-07-13 Sat 12:48]
+CLOCK: [2013-07-13 Sat 12:01]--[2013-07-13 Sat 12:48] =>  0:47
+CLOCK: [2013-07-13 Sat 09:54]--[2013-07-13 Sat 10:20] =>  0:26
+:PROPERTIES:
+:ID:       39103168-00D5-4C92-A89B-28735E991612
+:END:
+** DONE [#A] Work exercises 2.1-2.5
+CLOSED: [2013-07-11 Thu 17:40]
+CLOCK: [2013-07-11 Thu 15:18]--[2013-07-11 Thu 17:40] =>  2:22
+CLOCK: [2013-07-11 Thu 10:12]--[2013-07-11 Thu 11:47] =>  1:35
+CLOCK: [2013-07-10 Wed 14:32]--[2013-07-10 Wed 16:53] =>  2:21
+   CLOCK: [2013-07-08 Mon 15:28]--[2013-07-08 Mon 15:41] =>  0:13
+   CLOCK: [2013-07-08 Mon 12:46]--[2013-07-08 Mon 15:20] =>  2:34
+   CLOCK: [2013-07-06 Sat 16:05]--[2013-07-06 Sat 16:17] =>  0:12
+   CLOCK: [2013-07-06 Sat 15:03]--[2013-07-06 Sat 15:37] =>  0:34
+   CLOCK: [2013-07-06 Sat 13:15]--[2013-07-06 Sat 14:51] =>  1:36
+   CLOCK: [2013-07-06 Sat 10:58]--[2013-07-06 Sat 11:22] =>  0:24
+:PROPERTIES:
+:ID:       A9654E4F-F041-40C0-B858-2AC5372AA8D2
+:END:
+** DONE [#B] Think of python examples
+CLOSED: [2013-07-13 Sat 12:48]
+:PROPERTIES:
+:ID:       1B53EA77-B3C1-4564-AEFD-60DC37A6B19D
+:END:
+
+*** HOLD Re-create =markov.m= and other Matlab programs      :WAITING:HOLD:
+- State "HOLD"       from "WAITING"    [2013-07-13 Sat 09:55] \\
+  Talk with Tom about this first
+:PROPERTIES:
+:ID:       804E4C2C-BE54-4DD8-AB4A-7F8D22676AED
+:END:
+
+*** HOLD Add Baysean estimation to dolo.                     :WAITING:HOLD:
+- State "HOLD"       from ""           [2013-07-13 Sat 09:56] \\
+  Talk to Tom about this first
+:PROPERTIES:
+:ID:       ED5A9CBF-F975-4211-A0F2-BB1DA8767C37
+:END:
+* Other Tasks
+:PROPERTIES:
+:ID:       85994194-6129-47F0-8A82-CDBD953937C1
+:END:
+:ID:       52FF1153-D302-45E5-8D10-C24FA0BF9766
+:END:
+* TODO z-transform  [1/2]                                               :TOM:
+#+BEGIN: clocktable :maxlevel 2 :scope subtree
+#+CAPTION: Clock summary at [2013-07-18 Thu 12:07]
+| Headline                           | Time    |       |
+|------------------------------------+---------+-------|
+| *Total time*                       | *14:40* |       |
+|------------------------------------+---------+-------|
+| TODO z-transform  [1/2]            | 14:40   |       |
+| \__ DONE Read Z-transform document |         |  3:40 |
+| \__ TODO Teaching module           |         | 10:49 |
+#+END:
+
+Tom asked us to read [[/Users/sglyon/School/NYU/NYUclasses/Sargent/ZTransform.pdf][ZTransform.pdf]] in this [[https://mail.google.com/mail/u/0/#inbox/13fca56945575292][email]].
+CLOCK: [2013-07-10 Wed 23:20]--[2013-07-10 Wed 23:31] =>  0:11
+:PROPERTIES:
+:ID:       2016BB11-A846-44F1-821F-8ACB73DE0146
+:END:
+[2013-07-10 Wed 23:20]
+** DONE Read Z-transform document                                  :READING:
+CLOSED: [2013-07-16 Tue 12:18] SCHEDULED: <2013-07-12 Fri>
+CLOCK: [2013-07-15 Mon 09:20]--[2013-07-15 Mon 10:13] =>  0:53
+CLOCK: [2013-07-13 Sat 00:00]--[2013-07-13 Sat 00:05] =>  0:05
+CLOCK: [2013-07-12 Fri 10:08]--[2013-07-12 Fri 10:59] =>  0:51
+CLOCK: [2013-07-12 Fri 08:45]--[2013-07-12 Fri 09:33] =>  0:48
+CLOCK: [2013-07-12 Fri 00:08]--[2013-07-12 Fri 00:24] =>  0:16
+:PROPERTIES:
+:ID:       5C001ED4-2035-4019-9761-0D8FE34591DF
+:END:
+*** Notes                                                           :NOTES:
+- Definition of *the one sided z-transform*: $$X(z) = \sum_{k=0} x(k) z^{-k}$$ where the complex variable $z$ is selected to ensure that the summation converges.
+- Look at the [[http://www.mathworks.com/help/symbolic/compute-z-transforms-and-inverse-z-transforms.html][rabbit problem]] for an example to include
+*** TODO Tom's PV Notes                                             :NOTES:
+
+Left of on page 24. He is finally getting to PV stuff with z-transform.
+
+CLOCK: [2013-07-15 Mon 11:06]--[2013-07-15 Mon 11:53] =>  0:47
+:PROPERTIES:
+:ID:       C591CE6F-47B8-4449-8CC4-D35B6D0213CA
+:END:
+
+
+** TODO Teaching module                                       :CHASE:PYTHON:
+CLOCK: [2013-07-18 Thu 14:38]--[2013-07-18 Thu 15:47] =>  1:09
+CLOCK: [2013-07-18 Thu 10:16]--[2013-07-18 Thu 12:07] =>  1:51
+CLOCK: [2013-07-17 Wed 09:50]--[2013-07-17 Wed 11:58] =>  2:08
+CLOCK: [2013-07-16 Tue 14:40]--[2013-07-16 Tue 15:18] =>  0:38
+CLOCK: [2013-07-16 Tue 13:11]--[2013-07-16 Tue 13:41] =>  0:30
+CLOCK: [2013-07-16 Tue 08:09]--[2013-07-16 Tue 13:41] =>  5:32
+CLOCK: [2013-07-15 Mon 09:03]--[2013-07-15 Mon 09:13] =>  0:10
+:PROPERTIES:
+:ID:       5A16242D-26A1-455D-A976-ACBAF4DDD83D
+:END:
+
+Quote from Tom's email:
+
+ #+BEGIN_QUOTE
+ Dear Chase and Spencer,
+
+ I am attaching a document on Z-transforms.
+
+ I want you to read this quickly, then get to work to make a two-part python demo (with a description in a *.rst file for me) that "teaches" the basics of z-transforms (without proofs -- just properties of z-transforms).  I want you to prepare a module that teaches how to use them to:
+
+ a) compute present values, and
+
+ b) solve linear difference equations.
+
+ The scipy.signal facility has much of what you need.  Start with page 455 of the scipy manual please.
+
+ Once you get familiar with z-transforms I'll ask you to do some things such as to get partial fractions decompositions and also to compute residues of some functions that I'll tell you about later.
+
+ As for the elementary material on present values, if you go to my web page, the teaching section, you'll find some handwritten notes for an undergraduate macro class. One of the first lectures talks about using z-transforms to compute present values of discrete time sequences.
+
+ (Later we might use Laplace transforms -- also in scipy -- to compute present values of continuous time functions).
+
+ I realize that  my instructions are a little vague, but feel free to be creative.
+
+ Very soon, I'll send you a request for another python project that is much more tightly specified.
+
+ How is your reading going?
+
+ Tom make a two-part python demo (with a description in a *.rst file for me) that "teaches" the basics of z-transforms (without proofs -- just properties of z-transforms).  I want you to prepare a module that teaches how to use them to:
+
+ a) compute present values, and
+ b) solve linear difference equations.
+
+ The scipy.signal facility has much of what you need.  Start with page 455 of the scipy manual please.
+ #+END_QUOTE
+
+More information on present value calculations can be found in Tom's [[~/Downloads/TSUndergradMacroNotes.pdf][notes]] from an undergraduate macro course he taught.
+* TODO Dynare -> python = dolo [0/2]                                    :TOM:
+#+BEGIN: clocktable :maxlevel 2 :scope subtree
+#+CAPTION: Clock summary at [2013-07-11 Thu 10:18]
+| Headline                           | Time   |
+|------------------------------------+--------|
+| *Total time*                       | *0:03* |
+|------------------------------------+--------|
+| TODO Dynare -> python = dolo [0/2] | 0:03   |
+#+END:
+
+CLOCK: [2013-07-11 Thu 10:09]--[2013-07-11 Thu 10:12] =>  0:03
+:PROPERTIES:
+:ID:       0245B38D-36D2-4218-8DC2-36334FF6EF7C
+:END:
+[2013-07-11 Thu 10:09]
+[[file:~/School/NYU/NYUclasses/Sargent/sargent.org::*z-transform][z-transform  {0/2}]]
+** TODO Read RMT4 chapter 11
+:PROPERTIES:
+:ID:       EED6D755-89E1-4048-8EB8-7D16A4A59F4A
+:END:
+Tom asked us to read RMT4 [[~/School/NYU/NYUclasses/Sargent/Summer2013/Refs/RMT4_ch11.pdf][chapter 11]] of RMT4 and pay special attention to how to do Matlab examples in python
+** TODO Matlab+Dynare -> python+dolo                          :PYTHON:CHASE:
+:PROPERTIES:
+:ID:       C3DB9A5A-70CD-40B3-B40F-676D87665811
+:END:
+Just do some dolo-fu on this and call it good
+* TODO Marching orders, number 2                                        :TOM:
+#+BEGIN: clocktable :maxlevel 2 :scope subtree
+#+CAPTION: Clock summary at [2013-07-18 Thu 00:35]
+| Headline                                  | Time   |      |
+|-------------------------------------------+--------+------|
+| *Total time*                              | *0:37* |      |
+|-------------------------------------------+--------+------|
+| TODO Marching orders, number 2            | 0:37   |      |
+| \__ TODO Work problems RMT4 2.6, 2.10.... |        | 0:35 |
+#+END:
+
+CLOCK: [2013-07-17 Wed 14:06]--[2013-07-17 Wed 14:08] =>  0:02
+:PROPERTIES:
+:ID:       B63EE52B-DFDC-4838-B5ED-4404907FDD95
+:END:
+[2013-07-17 Wed 14:06]
+[[file:~/Dropbox/org/xdress.org::*Enum%20support%20in%20xdress][Enum support in xdress]]
+** TODO Read [[file:~/School/NYU/NYUclasses/Sargent/Summer2013/Refs/RMT4_ch11.pdf][RMT4 Chapter 11]]                                       :READING:
+CLOCK: [2013-07-20 Sat 09:53]--[2013-07-20 Sat 10:54] =>  1:01
+CLOCK: [2013-07-20 Sat 08:50]--[2013-07-20 Sat 09:13] =>  0:23
+CLOCK: [2013-07-20 Sat 08:50]--[2013-07-20 Sat 08:50] =>  0:00
+CLOCK: [2013-07-19 Fri 19:37]--[2013-07-19 Fri 19:57] =>  0:20
+:PROPERTIES:
+:ID:       D7454813-A217-42CD-A074-1599BF68C827
+:END:
+** TODO Work problems RMT4 2.6, 2.10. 2.14, 2.17, 2.20, 2.24            :HW:
+CLOCK: [2013-07-20 Sat 23:09]--[2013-07-20 Sat 23:34] =>  0:25
+CLOCK: [2013-07-20 Sat 22:29]--[2013-07-20 Sat 22:59] =>  0:30
+CLOCK: [2013-07-20 Sat 16:45]--[2013-07-20 Sat 17:12] =>  0:27
+CLOCK: [2013-07-20 Sat 15:29]--[2013-07-20 Sat 16:36] =>  1:07
+CLOCK: [2013-07-20 Sat 13:49]--[2013-07-20 Sat 14:10] =>  0:21
+CLOCK: [2013-07-20 Sat 11:51]--[2013-07-20 Sat 12:17] =>  0:26
+CLOCK: [2013-07-18 Thu 00:00]--[2013-07-18 Thu 00:35] =>  0:35
+:PROPERTIES:
+:ID:       CD33EBD9-6E07-4890-9537-B7C1A314C826
+:END:
+** TODO Replicate figure 11.9.1 in RMT4 (page 401)                  :PYTHON:
+:PROPERTIES:
+:ID:       45296A34-EA73-47F2-82C2-396F988ABCB7
+:END:
